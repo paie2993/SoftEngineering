@@ -1,0 +1,217 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fswiss\fcharset0 AAAAAG+Calibri;}{\f2\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red0\green0\blue0;}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang9 Conference Management System\par
+\par
+
+\pard\sa200\sl276\slmult1\qj\b 1. Introduction\par
+\cf1\b0\f1 The process of managing informaton required for organising a conference is a timeconsuming actvity. In order to produce and manage this information, using a dedicated sofware application is from far the best solution. \par
+\par
+\b 2. Current System\par
+\b0 There isn't any already existing system on which the proposed system is build. The system is build from scratch \par
+\par
+\b 3. Proposed System\par
+3.1 Overview\par
+\b0 The system ensured that users of every role (chair, reviewer, author) can obtain all the information required for their need with respect to the conferences in which they are engaged. A distinction is made between the users of the three roles. There are functionalities common to all three roles, as well as functionalities specific to every role. Besided access to conference information, the users can also add information to the system. A chair can modify the details of the conference for which they are responsible. An author can submit papers to a conference. A reviewer can label a paper submitted by an author as accepted or rejected.\par
+\par
+\b 3.2 Functional requirements \par
+\b0 a. Common functionalities:\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\fi-360\li360\sa200\sl276\slmult1\qj Users (chair, author, reviewer) sign in using their unique username or email, and their password.\par
+{\pntext\f2\'B7\tab}Users can see their personal information (first name, last name, date of birth, phone number, address).\par
+{\pntext\f2\'B7\tab}Users can update their personal information.\par
+{\pntext\f2\'B7\tab}Users can see the list of all conferences.\par
+
+\pard\sa200\sl276\slmult1\qj\par
+b. Chair functionalities:\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\fi-360\li360\sa200\sl276\slmult1\qj A chair can see the list of all conferences.\par
+{\pntext\f2\'B7\tab}A chair can see the conference details of any conference.\par
+{\pntext\f2\'B7\tab}A chair can update the conference details of any conference they preside over.\par
+{\pntext\f2\'B7\tab}A chair can see the topics of interest of any conference.\par
+{\pntext\f2\'B7\tab}A chair can update the topics of interest of any conference they preside over.\par
+{\pntext\f2\'B7\tab}A chair can see all the papers in any conference they preside over.\par
+{\pntext\f2\'B7\tab}A chair can make the final decision regarding the status of any paper (accepted/rejected) in any conference they preside over.\par
+{\pntext\f2\'B7\tab}A chair can see all the accepted papers in any conference they preside over.\par
+{\pntext\f2\'B7\tab}A chair can assign any accepted paper to any of the conference sessions of any conference they preside over. An accepted paper can be assigned to only one conference session inside the same conference.\par
+{\pntext\f2\'B7\tab}A chair can see all four deadlines of a conference: paper submission deadline, paper review deadline, acceptance notification deadline, uploading of accepted paper deadline.\par
+{\pntext\f2\'B7\tab}A chair can modify any of the four deadlines of a conference.\par
+
+\pard\sa200\sl276\slmult1\qj\par
+c. Author functionalities:\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\fi-360\li360\sa200\sl276\slmult1\qj An author can see all the papers they have personally submitted.\par
+{\pntext\f2\'B7\tab}An author can see all the papers in which they are labeled as an author.\par
+{\pntext\f2\'B7\tab}An author can see the status (pending/accepted/rejected) of any paper they have personally submitted.\par
+{\pntext\f2\'B7\tab}An author can see the status of any paper in which they are labeled as an author.\par
+{\pntext\f2\'B7\tab}An author can see the paper details of any paper they have personally submitted.\par
+{\pntext\f2\'B7\tab}An author can see the paper details of any paper in which they are labeled as an author.\par
+{\pntext\f2\'B7\tab}An author can upload the camera-ready copy of a paper.\par
+{\pntext\f2\'B7\tab}An author can upload the full paper (PDF or Word).\par
+{\pntext\f2\'B7\tab}An author can submit paper information (title, abstract, other authors, their emails, their addresses, their phone numbers, their addresses)\par
+
+\pard\sa200\sl276\slmult1\qj\par
+d. Reviewer functionalities:\par
+
+\pard{\pntext\f2\'B7\tab}{\*\pn\pnlvlblt\pnf2\pnindent0{\pntxtb\'B7}}\fi-360\li360\sa200\sl276\slmult1\qj A reviewer can see a list of all papers.\par
+{\pntext\f2\'B7\tab}A reviewer can see the details (title, abstract, authors, authors' contact information) of any paper.\par
+{\pntext\f2\'B7\tab}A reviewer can bid for a paper they are interested in reviewing.\par
+{\pntext\f2\'B7\tab}A reviewer can specify and modify their topics of interest.\par
+{\pntext\f2\'B7\tab}A reviewer can see their topics of interest.\par
+{\pntext\f2\'B7\tab}The system must assign papers automatically to reviewers.\par
+{\pntext\f2\'B7\tab}A reviewer can see a list of all the papers that have been assigned to them to be reviewed.\par
+{\pntext\f2\'B7\tab}A reviewer can indicate a conflict of interests found in a paper.\par
+{\pntext\f2\'B7\tab}A reviewer can submit an evaluation to a paper they had to review (accepted/rejected)\par
+{\pntext\f2\'B7\tab}A reviewer can see all the papers they have reviewed.\par
+{\pntext\f2\'B7\tab}A reviewer can submit a special commend to any paper they have reviewed. Any reviewer can then see the special comment.\par
+
+\pard\sa200\sl276\slmult1\qj\par
+\b 3.3 Nonfunctional requirements:\par
+Usability:\par
+\b0\par
+\b Reliability:\par
+\b0 The system must be able to restart after system failure.\par
+The system must be able to back-up data and recover data using back-ups.\par
+The system must ensure that username and emails (sign in information) is unique.\par
+The system must ensure that passwords are securely stored.\b\par
+\par
+Performance:\b0\par
+The system should be able to display information and execute updates in less than 5 seconds.\par
+The system should be able to generate the documents mentioned in the functional requirements in less than 20 seconds.\par
+\b\par
+Supportability:\b0\par
+
+\pard\sa200\sl276\slmult1\qj --\par
+\par
+\b 3.4 Pseudo-requirements:\par
+Implementation:\b0\par
+Use Case Diagrams, Class Diagrams, Activity Diagrams are all constructed using starUML.\par
+The business logic is implemented in Java.\par
+The front-end is written in React.\par
+\par
+\b Interface:\b0\par
+--\par
+\par
+\b Operations: \b0\par
+As a version control technology, Git is used.\par
+Github is used a host for the remote repository for the versions of the project and for the system specifications.\par
+Github Issues is used for managing and planning system development.\par
+\par
+\b Packaging:\b0\par
+--The deployment techonologies: to be filled in.\par
+\par
+\b Legal:\par
+\b0 The user's personal information is strictly confidential. Only the user himself can view it or modify it. User's information will not be leaked to tertiary parties.\par
+\par
+\b 3.5 System model\b0 :\par
+\b 3.5.1 Scenarios\b0 :\par
+A. \par
+\ul name\ulnone : \tab\tab uploadPersonalInformation\par
+\ul actor\ulnone : \tab\tab Jane:\ul User\ulnone\par
+\ul flow of events\ulnone :\par
+1. Jane signs in and arrives at the main page\par
+2. On the main page of the website, out of the options listed on a menu, she chooses "Personal Information". A page displaying a table with her personal information appears. \par
+3. She changes the fields 'Last Name' to the value Lee and a few other fields, and saves the changes by interacting with a button. Now the table reloads and displays the updated information.\par
+\par
+B.\par
+\ul name\ulnone :\tab\tab uploadCameraReadyCopy\par
+\ul actor\ulnone :\tab\tab Jeniffer: \ul Author\par
+flow of events:\par
+\ulnone 1. Jeniffer signs in and arrives to the main page.\par
+2. Jeniffer selects from the menu the option "See all uploaded papers" and arrives at page with a list of all the papers she has uploaded.\par
+3. She wants to participate in three conferences with a paper she has uploaded only to one conference, "Databases and the Relational Model", as far as she remembers. From the list, she selects her paper, titled "UML to Relational" and inspects the details of the paper. The details of the page contains, besides other information, a list with all the conferences in which her paper has been submitted.\par
+4. In the list of conferences, Jeniffer sees that the paper has been submitted to two conferences out of the three she intended to take part in.\par
+5. She selects from the menu the option "Conferences".\par
+6. She selects the last conference she wished to take part in with her paper "UML to Relational".\par
+7. She submits her page by uploading a camera-ready copy, filling in some information related to the paper and accepting terms and conditions.\par
+\par
+C:\par
+\ul name\ulnone :\tab\tab\tab modifyDeadlines\par
+\ul actor\ulnone :\tab\tab\tab Thomas: \ul Chair\ulnone\par
+\ul context:\ulnone\par
+The conference manged by Thomas , "Bioinformatics and modern challenges", is scheduled to take place the following year, but Thomas decides that it is high time that he sets the deadlines for the various phases of the conference\ul\par
+flow of events\ulnone :\par
+1. Thomas signs in and arrives at the main page.\par
+2. . He selects from the menu the option "Conferences". A list of all conferences in the system is displayed, but Thomas is interested only in his own coference. \par
+3. He selects "Bioinformatics and modern challenges" from the list and views the deadlines: "Paper Submission", "Paper Review", "Acceptance Notification", "Uploading Accepted Papers"\par
+4. Thomas modifies the deadlines, and if there are any inconsistencies, they are signaled to Thomas.\par
+\par
+D:\par
+\ul name\ulnone :\tab\tab\tab setConferenceTopicOfInterest\par
+\ul actor\ulnone :\tab\tab\tab Lawrence: \ul Chair\par
+context:\par
+\ulnone Lawrence decides that, in addition to the already mentioned topics of interest of his conference, "Foo Bar", two new topics are accepted this year, XX and YY, due to a visible surge in the interest for them in the regional community.\par
+\ul flow of events\ulnone :\par
+1. Lawrence signs in and arrives at the main page.\par
+2. He selects the option "Conferences" from the menu and is presented a list with all the conferences.\par
+3. Lawrence selects "Foo Bar" from the list and inspects the "Topics of interest" of the conference.\par
+4. To the already existant topics, Lawrence adds "XX" and "YY"\par
+\par
+E:\par
+\ul name\ulnone :\tab\tab decideOnPaperStatus\par
+\ul actor\ulnone :\tab\tab Sterne: \ul Chair\par
+context:\par
+\ulnone Sterne is not only an excellent conference manager. He is also a reputed computer scientist, having held himself many conferences over the years. One of his conferences "XYZ" is approaching its 'paper review deadline', yet a paper submitted by another well-known computer scientist, almost as famous as Sterne himself, has not been reviewed yet. Unless Sterne himself accepts the paper, the paper will automatically be evaluated as 'rejected' by the system when the deadline is passed. Sterne skims through the paper with ease and joy, and decides that the paper is a gem and must be accepted into the conference.\ul\par
+flow of events:\ulnone\par
+1. Sterne signs in and arrives at the main page.\par
+2. He selects the option "Conferences" from the menu and is presented a list with all the conferences.\par
+3. He searches for the conference "XYZ" ,selects the conference from the list, and inspects the list of papers submitted to the conference.\par
+4. Sterne searches for the paper he wants to accept, and registers his evaluation of the paper: "accepted".\par
+5. If he changes his mind, Sterne can "clear" or even explicitly "reject" the paper.\par
+\par
+F.\par
+\ul name\ulnone :\tab\tab assignAcceptedPaperToConferenceSession\par
+\ul actor\ulnone :\tab\tab Roger: \ul Chair\par
+context:\par
+\ulnone An accepted paper can be assigned only to one conference session within a conference. Roger wants to assign a batch of accepted papers to specific conference sessions. This option only becomes available for a conference after the "acceptance notification deadline" has passed.\par
+\ul flow of events\ulnone :\par
+1. Roger signs in and arrives at the main page.\par
+2. Roger selects the option "Conferences" from the menu and is presented a list with all the conferences.\par
+3. From the list, he selects the conference for which he wants to assing accepted papers to conference sessions. Then, Roger inspects the list of sessions for the selected conference.\par
+4. Roger selects a given sessions, to which he can add accepted papers that are unassigned, or from which he unassign papers, which allows him to assign those papers to other sessions of the conference.\par
+\par
+G.\par
+\ul name\ulnone :\tab\tab submitBasicConferenceInfo\par
+\ul actor\ulnone :\tab\tab Joseph: \ul Chair\ulnone\par
+\ul flow of events\ulnone :\tab\par
+1. Joseph signs in and arrives at the main page.\par
+2. Joseph selects the option "Conferences" from the menu and is presented a list with all the conferences.\par
+3. Joseph filters the list such that he only sees the conferences presided by him. \par
+4. Joseph selects the conference for which he wants to modify the basic information. He inspects the basic conference information associted to the selected conference (if there is any) and modifies it.\par
+\par
+H.\par
+\ul name\ulnone :\tab\tab specifyReviewerTopicsOfInterest\par
+\ul actor\ulnone :\tab\tab Suzan: \ul Reviewer\par
+context:\par
+\ulnone Suzan underwent a master's at TUM, and the scope of her interest became wider. She wants to add three new topics, "A", "B", "C" to the topics of interests specified in her account.\par
+\ul flow of events\ulnone :\par
+1. Suzan signs in and arrives at the main page.\par
+2. Suzan selects the option "Topics of Interest" from the menu. Now, Suzan sees a list with all her specified topic of interest.\par
+3. Suzan adds at the end of the list "A", "B", "C", and then she saves the changes.\par
+\par
+I.\par
+\ul name\ulnone :\tab\tab bidForInterestingPaper\par
+\ul actor\ulnone :\tab\tab Charlotte: \ul Reviewer\ulnone\par
+\ul context\ulnone :\par
+Charlotte has heard from other reviewers about some papers that might interest her. Unless she searches for those papers and bids for them, she might not have the chance to read them.\ul\par
+flow of events\ulnone :\par
+1. Charlotte signs in and arrives at the main page.\par
+2. Charlotte selects the option "Papers" from the menu, which brings her to a list with all the submitted papers from all the conferences.\par
+3. She scrolls through the list, selecting and inspecting the abstacts of those papers whose titles caught her attention. \par
+4. When she comes across a paper which seems very interesting to her, Suzan bids for the paper with a certain "interest" (for example, values from 1 to 100).\par
+\par
+\par
+\b 3.5.2 Functional View:\par
+\b0 I. Use Case Diagrams -> to be added in the word document\par
+II. Use Case Description -> to be added in the word document, after Tudi and Maria will have finished writing it.\par
+\par
+\b 3.5.3 Structural View:\b0\par
+I. Class Diagrams -> to be added in the word document, after Radu will have finished writing it.\par
+II. Database Diagrams -> to be added in the word document, after I arrive home.\par
+\par
+\b 3.5.4 Behavioral View:\b0\par
+Activity diagrams. There can be various such diagrams, one for each functionality.\par
+\par
+\b 3.5.5. Interface:\b0\par
+}
+ 
