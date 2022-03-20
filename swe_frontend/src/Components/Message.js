@@ -1,26 +1,24 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 
+export default class Message extends React.Component {
+    state = {
+        message: ''
+      }
+    
+      componentDidMount() {
+        axios.get(`http://localhost:8080/message`)
+          .then(res => {
+            const message = res.data.text;
+            this.setState({ message });
+          })
+      }
 
-export const Message = () => {
-    const api_url = 'http://localhost:8080/helloworld'
-    const [message, setMessage] = useState('');
-
-    useEffect(() => () => {
-        axios.get(api_url).then(response => {
-            setMessage(response.data.text)
-            console.log(response.data.text)
-        }
+    render() {
+        return (
+            <>
+                <h1>{this.state.message}</h1>
+            </>
         )
-        .catch(error => console.error(`Error: ${error}`));
-    }, [])
-
-
-    return (
-        <>
-            <h1>{message}</h1>
-        </>
-    )
+    }
 }
-
-export default Message;
