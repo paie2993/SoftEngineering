@@ -1,0 +1,3 @@
+db password: Yakuza123!
+
+connect from docker container CLI: /opt/mssql-tools/bin/sqlcmd -S localhost -U SA -P "Yakuza123!"
