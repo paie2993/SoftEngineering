@@ -1,4 +1,8 @@
-use Conference
+create database cms
+go
+
+use cms
+go
 
 create table UserTypes(
 	id int primary key,
