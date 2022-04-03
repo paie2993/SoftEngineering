@@ -1,3 +1,5 @@
+use Conference
+
 create table UserTypes(
 	id int primary key,
 	[type] varchar(20)
@@ -76,6 +78,9 @@ create table Conferences(
 
 create table ConferenceSessions(
 	id int primary key identity(1, 1),
+	eventDate DATE,
+	startTime TIME,
+	endTime TIME,
 	conferenceId int not null,
 	constraint FK_ConferenceSessions_Conferences foreign key (conferenceId) references Conferences (id)
 	on update cascade
@@ -84,6 +89,7 @@ create table ConferenceSessions(
 
 create table TopicsOfInterest(
 	id int primary key identity(1, 1),
+	[name] varchar(50) not null,
 	[description] varchar(50)
 )
 
