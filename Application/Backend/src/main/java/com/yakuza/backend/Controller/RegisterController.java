@@ -32,10 +32,10 @@ public class RegisterController {
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterRequestModel request){
         if(userRepository.existsByEmail(request.getEmail())){
-            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
         }
         if(userRepository.existsByUsername(request.getUsername())){
-            return new ResponseEntity<>("Email is already taken!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
 
         // Password must be between 4 and 8 digits long and include at least one numeric digit.
