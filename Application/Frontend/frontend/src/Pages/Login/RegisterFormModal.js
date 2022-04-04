@@ -184,7 +184,7 @@ function RegisterFormModal(props) {
                             required
                             fullWidth
                             id="streetNumber"
-                            label="Street"
+                            label="Street Number"
                             name="streetNumber"
                             autoFocus
                             onChange={handleRegisterInput}
