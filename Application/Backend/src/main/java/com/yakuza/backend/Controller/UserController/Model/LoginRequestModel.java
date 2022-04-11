@@ -1,14 +1,14 @@
-package com.yakuza.backend.JWTUtils.Model;
+package com.yakuza.backend.Controller.UserController.Model;
 
 import java.io.Serializable;
 
-public class JWTRequestModel implements Serializable {
+public class LoginRequestModel implements Serializable {
     private String username;
     private String password;
 
-    public JWTRequestModel() {}
+    public LoginRequestModel() {}
 
-    public JWTRequestModel(String username, String password) {
+    public LoginRequestModel(String username, String password) {
         this.username = username;
         this.password = password;
     }

@@ -1,8 +1,8 @@
-package com.yakuza.backend.JWTUtils.Model;
+package com.yakuza.backend.Controller.UserController.Model;
 
 import java.io.Serializable;
 
-public class JWTResponseModel implements Serializable {
+public class LoginResponseModel implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String token;
     private final String name;
@@ -12,7 +12,7 @@ public class JWTResponseModel implements Serializable {
         return name;
     }
 
-    public JWTResponseModel(String token, String name, String role) {
+    public LoginResponseModel(String token, String name, String role) {
         this.token = token;
         this.name = name;
         this.role = role;
