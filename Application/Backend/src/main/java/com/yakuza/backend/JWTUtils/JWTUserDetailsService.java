@@ -1,6 +1,6 @@
 package com.yakuza.backend.JWTUtils;
 
-import com.yakuza.backend.Model.CMSUser;
+import com.yakuza.backend.Model.UserModel.CMSUser;
 import com.yakuza.backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

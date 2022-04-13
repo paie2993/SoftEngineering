@@ -7,15 +7,17 @@ public class LoginResponseModel implements Serializable {
     private final String token;
     private final String name;
     private final String role;
+    private final Integer id;
 
     public String getName() {
         return name;
     }
 
-    public LoginResponseModel(String token, String name, String role) {
+    public LoginResponseModel(String token, String name, String role, Integer id) {
         this.token = token;
         this.name = name;
         this.role = role;
+        this.id = id;
     }
 
     public String getToken() {
@@ -26,4 +28,7 @@ public class LoginResponseModel implements Serializable {
         return role;
     }
 
+    public Integer getId() {
+        return id;
+    }
 }

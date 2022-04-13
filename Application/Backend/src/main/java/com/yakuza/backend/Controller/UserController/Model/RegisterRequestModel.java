@@ -30,7 +30,7 @@ public class RegisterRequestModel implements Serializable {
     @NotNull
     private String city;
     @NotNull
-    private Integer streetNumber;
+    private String streetNumber;
     @NotNull
     private Integer userType;
 
@@ -74,7 +74,7 @@ public class RegisterRequestModel implements Serializable {
         return city;
     }
 
-    public Integer getStreetNumber() {
+    public String getStreetNumber() {
         return streetNumber;
     }
 

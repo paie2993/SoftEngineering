@@ -1,16 +1,17 @@
-package com.yakuza.backend.Model;
+package com.yakuza.backend.Model.UserModel;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(schema = "dbo", name = "Users")
-public class CMSUser {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class CMSUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,6 +21,18 @@ public class CMSUser {
     private String email;
     @JsonIgnore
     private String password;
+    private String firstName;
+    private String lastName;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
+    private String phoneNumber;
+    private String country;
+    private String street;
+    private String city;
+    private String streetNumber;
+    @ManyToOne
+    @JoinColumn(name="userType", nullable = false)
+    private UserType userType;
 
     public void setId(Integer id) {
         this.id = id;
@@ -65,7 +78,7 @@ public class CMSUser {
         this.city = city;
     }
 
-    public void setStreetNumber(Integer streetNumber) {
+    public void setStreetNumber(String streetNumber) {
         this.streetNumber = streetNumber;
     }
 
@@ -73,18 +86,6 @@ public class CMSUser {
         this.userType = userType;
     }
 
-    private String firstName;
-    private String lastName;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate dateOfBirth;
-    private String phoneNumber;
-    private String country;
-    private String street;
-    private String city;
-    private Integer streetNumber;
-    @ManyToOne
-    @JoinColumn(name="userTypeId", nullable = false)
-    private UserType userType;
 
     public Integer getId() {
         return id;
@@ -130,7 +131,7 @@ public class CMSUser {
         return city;
     }
 
-    public Integer getStreetNumber() {
+    public String getStreetNumber() {
         return streetNumber;
     }
 
