@@ -1,10 +1,11 @@
 import './App.css';
-import Message from './Components/Message';
+import { Sidebar } from './chair_GUI/components/Sidebar';
+import { AllPapers } from './chair_GUI/pages/AllPapers/AllPapers';
 
 function App() {
   return (
     <>
-      <Message></Message>
+      <AllPapers />
     </>
   );
 }
