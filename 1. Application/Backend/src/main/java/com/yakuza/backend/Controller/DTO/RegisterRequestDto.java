@@ -1,13 +1,12 @@
-package com.yakuza.backend.Controller.Model;
+package com.yakuza.backend.Controller.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public class RegisterRequestModel implements Serializable {
+public class RegisterRequestDto implements Serializable {
     @NotNull
     private String username;
     @NotNull
@@ -30,7 +29,7 @@ public class RegisterRequestModel implements Serializable {
     @NotNull
     private String city;
     @NotNull
-    private Integer streetNumber;
+    private String streetNumber;
     @NotNull
     private Integer userType;
 
@@ -74,7 +73,7 @@ public class RegisterRequestModel implements Serializable {
         return city;
     }
 
-    public Integer getStreetNumber() {
+    public String getStreetNumber() {
         return streetNumber;
     }
 

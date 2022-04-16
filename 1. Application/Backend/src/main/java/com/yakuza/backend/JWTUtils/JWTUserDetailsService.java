@@ -1,9 +1,10 @@
 package com.yakuza.backend.JWTUtils;
 
-import com.yakuza.backend.Model.User;
+import com.yakuza.backend.Model.UserModel.CMSUser;
 import com.yakuza.backend.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,12 +22,12 @@ public class JWTUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            User user = userRepository.findByUsername(username);
+            CMSUser user = userRepository.findByUsername(username);
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
             authorities.add(new SimpleGrantedAuthority(user.getUserType().getType()));
 
-            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+            return new User(user.getUsername(), user.getPassword(), authorities);
         } catch (EntityNotFoundException e){
             throw new UsernameNotFoundException("User not found with username: " + username);
         }

@@ -1,4 +1,6 @@
-package com.yakuza.backend.Model;
+package com.yakuza.backend.Model.UserModel;
+
+import com.yakuza.backend.Model.UserModel.CMSUser;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,7 +14,7 @@ public class UserType {
     private String type;
 
     @OneToMany(mappedBy = "userType")
-    private Set<User> users;
+    private Set<CMSUser> users;
 
     public void setId(Integer id) {
         this.id = id;

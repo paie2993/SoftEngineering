@@ -6,8 +6,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(schema = "dbo", name = "BidsForPapers")
-public class BidForPaper implements Serializable {
+@Table(schema = "dbo", name = "PaperComments")
+public class PaperComment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -17,6 +17,5 @@ public class BidForPaper implements Serializable {
     @ManyToOne
     @JoinColumn(name = "paper_id", nullable = false)
     private Paper paper;
-    private Integer interest;
+    private String content;
 }
-
