@@ -7,18 +7,18 @@ export const Sidebar = () => {
 
     return (
         <React.Fragment>
-        <div class="sidebar-container">
-            <div class='home-section'>
-                <div class="home btn">
+        <div className="sidebar-container">
+            <div className='home-section'>
+                <div className="home btn">
                 <HomeRoundedIcon/>
                 Home</div>
             </div>
-            <div class="menu-section">
-                <div class="menu btn">Conferences</div>
-                <div class="menu btn">All papers</div>
-                <div class="menu btn">Personal Info</div>
+            <div className="menu-section">
+                <div className="menu btn">Conferences</div>
+                <div className="menu btn">All papers</div>
+                <div className="menu btn">Personal Info</div>
             </div>
-            <div class="logout btn">
+            <div className="logout btn">
                 <LogoutRoundedIcon/>
                 Log Out
                 </div>

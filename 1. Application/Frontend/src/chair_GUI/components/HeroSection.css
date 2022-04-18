@@ -5,6 +5,17 @@
   padding: 10px 10px 10px 50px;
 }
 
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-decoration: none;
+  color: #5a6377;
+}
+
 .title {
   font-family: "Anek Telugu", sans-serif;
   font-family: "Bebas Neue", cursive;
