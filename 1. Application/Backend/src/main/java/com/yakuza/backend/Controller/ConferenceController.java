@@ -20,6 +20,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -90,7 +91,7 @@ public class ConferenceController {
         // if the user isn't the chair of the conference, return unauthorized
         Conference conference = conferenceOptional.get();
 
-        if(conference.getChair().getId() != user.getId()) {
+        if(!Objects.equals(conference.getChair().getId(), user.getId())) {
             return new ResponseEntity<>("You are not the chair of this conference", HttpStatus.UNAUTHORIZED);
         }
 
