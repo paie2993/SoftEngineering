@@ -9,11 +9,7 @@ import java.util.Set;
 @Entity
 @Table(schema = "dbo", name = "Authors")
 public class Author extends CMSUser{
-    @ManyToMany
-    @JoinTable(
-            name = "Authors_Papers",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "paper_id")
-    )
+    @ManyToMany(mappedBy = "authors")
+
     private Set<Paper> papers;
 }

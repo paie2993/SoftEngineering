@@ -12,6 +12,102 @@ import java.util.Set;
 @Entity
 @Table(schema = "dbo", name = "Papers")
 public class Paper implements Serializable {
+    public Set<TopicOfInterest> getTopicsOfInterest() {
+        return topicsOfInterest;
+    }
+
+    public Set<Keyword> getKeywords() {
+        return keywords;
+    }
+
+    public Set<Author> getAuthors() {
+        return authors;
+    }
+
+    public Set<ConferenceSession> getConferenceSessions() {
+        return conferenceSessions;
+    }
+
+    public Set<ConflictOfInterest> getConflictsOfInterest() {
+        return conflictsOfInterest;
+    }
+
+    public Set<BidForPaper> getBidsForPaper() {
+        return bidsForPaper;
+    }
+
+    public Set<Reviewer> getReviewers() {
+        return reviewers;
+    }
+
+    public Set<PaperComment> getPaperComments() {
+        return paperComments;
+    }
+
+    public Set<ChairEvaluation> getChairEvaluations() {
+        return chairEvaluations;
+    }
+
+    public Set<ReviewerEvaluation> getReviewerEvaluations() {
+        return reviewerEvaluations;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setPaperAbstract(String paperAbstract) {
+        this.paperAbstract = paperAbstract;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setCameraCopyUrl(String cameraCopyUrl) {
+        this.cameraCopyUrl = cameraCopyUrl;
+    }
+
+    public void setFullCopyUrl(String fullCopyUrl) {
+        this.fullCopyUrl = fullCopyUrl;
+    }
+
+    public void setConference(Conference conference) {
+        this.conference = conference;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getPaperAbstract() {
+        return paperAbstract;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getCameraCopyUrl() {
+        return cameraCopyUrl;
+    }
+
+    public String getFullCopyUrl() {
+        return fullCopyUrl;
+    }
+
+    public Conference getConference() {
+        return conference;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,6 +118,9 @@ public class Paper implements Serializable {
     private String status;
     private String cameraCopyUrl;
     private String fullCopyUrl;
+    @ManyToOne
+    @JoinColumn(name = "Conference_id", nullable = false)
+    private Conference conference;
     @ManyToMany
     @JoinTable(
             name = "Papers_Topics",
@@ -36,7 +135,12 @@ public class Paper implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "keyword_id")
     )
     private Set<Keyword> keywords;
-    @ManyToMany(mappedBy = "papers")
+    @ManyToMany
+    @JoinTable(
+            name = "Authors_Papers",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "paper_id")
+    )
     private Set<Author> authors;
     @ManyToMany(mappedBy = "papers")
     private Set<ConferenceSession> conferenceSessions;
@@ -52,4 +156,44 @@ public class Paper implements Serializable {
     private Set<ChairEvaluation> chairEvaluations;
     @OneToMany(mappedBy = "paper")
     private Set<ReviewerEvaluation> reviewerEvaluations;
+
+    public void setTopicsOfInterest(Set<TopicOfInterest> topicsOfInterest) {
+        this.topicsOfInterest = topicsOfInterest;
+    }
+
+    public void setKeywords(Set<Keyword> keywords) {
+        this.keywords = keywords;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
+
+    public void setConferenceSessions(Set<ConferenceSession> conferenceSessions) {
+        this.conferenceSessions = conferenceSessions;
+    }
+
+    public void setConflictsOfInterest(Set<ConflictOfInterest> conflictsOfInterest) {
+        this.conflictsOfInterest = conflictsOfInterest;
+    }
+
+    public void setBidsForPaper(Set<BidForPaper> bidsForPaper) {
+        this.bidsForPaper = bidsForPaper;
+    }
+
+    public void setReviewers(Set<Reviewer> reviewers) {
+        this.reviewers = reviewers;
+    }
+
+    public void setPaperComments(Set<PaperComment> paperComments) {
+        this.paperComments = paperComments;
+    }
+
+    public void setChairEvaluations(Set<ChairEvaluation> chairEvaluations) {
+        this.chairEvaluations = chairEvaluations;
+    }
+
+    public void setReviewerEvaluations(Set<ReviewerEvaluation> reviewerEvaluations) {
+        this.reviewerEvaluations = reviewerEvaluations;
+    }
 }

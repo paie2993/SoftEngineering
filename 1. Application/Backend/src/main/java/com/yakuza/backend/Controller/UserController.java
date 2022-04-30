@@ -99,9 +99,9 @@ public class UserController {
             return new ResponseEntity<>("Password must be between 4 and 8 digits long and include at least one numeric digit.", HttpStatus.BAD_REQUEST);
         }
 
-        if(!emailPattern.matcher(request.getEmail()).matches()) {
-            return new ResponseEntity<>("Invalid email", HttpStatus.BAD_REQUEST);
-        }
+//        if(!emailPattern.matcher(request.getEmail()).matches()) {
+//            return new ResponseEntity<>("Invalid email", HttpStatus.BAD_REQUEST);
+//        }
 
         if(request.getUsername().length() < 3) {
             return new ResponseEntity<>("Username must be longer than 3 characters", HttpStatus.BAD_REQUEST);

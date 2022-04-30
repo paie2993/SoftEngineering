@@ -42,6 +42,17 @@ public class Conference implements Serializable {
     )
     private Set<TopicOfInterest> topicsOfInterest;
 
+    public void setPapers(Set<Paper> papers) {
+        this.papers = papers;
+    }
+
+    public Set<Paper> getPapers() {
+        return papers;
+    }
+
+    @OneToMany(mappedBy = "conference")
+    private Set<Paper> papers;
+
     public void setId(Integer id) {
         this.id = id;
     }

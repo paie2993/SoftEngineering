@@ -53,6 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/webjars/**").permitAll()
                 .antMatchers("/hello").hasAnyAuthority("AUTHOR", "CHAIR")
                 .antMatchers(HttpMethod.PUT ,"/conference/{id}").hasAuthority("CHAIR")
+                .antMatchers(HttpMethod.GET, "/conference/{id}/papers").hasAuthority("CHAIR")
+                .antMatchers(HttpMethod.GET, "/paper/").hasAuthority("REVIEWER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)

@@ -2,6 +2,7 @@ package com.yakuza.backend.Controller.DTO;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yakuza.backend.Model.Conference;
+import com.yakuza.backend.Model.ConferenceSession;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -27,6 +28,7 @@ public class ConferenceInfoResponseDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date uploadingPaperDeadline;
     private Set<TopicOfInterestDto> topics;
+    // TODO: add sessions to info response
 
     public ConferenceInfoResponseDto(Conference conference) {
         this.id = conference.getId();

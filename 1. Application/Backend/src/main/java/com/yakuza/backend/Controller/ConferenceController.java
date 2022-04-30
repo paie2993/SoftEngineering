@@ -3,6 +3,7 @@ package com.yakuza.backend.Controller;
 import com.yakuza.backend.Controller.DTO.ConferenceInfoResponseDto;
 import com.yakuza.backend.Controller.DTO.ConferenceListItemDto;
 import com.yakuza.backend.Controller.DTO.ConferenceUpdateRequestDto;
+import com.yakuza.backend.Controller.DTO.PaperInfoDto;
 import com.yakuza.backend.Model.Conference;
 import com.yakuza.backend.Model.TopicOfInterest;
 import com.yakuza.backend.Model.UserModel.CMSUser;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.net.http.HttpResponse;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Objects;
@@ -167,4 +169,35 @@ public class ConferenceController {
 
         return ResponseEntity.ok("Success");
     }
+
+    @GetMapping("/{id}/papers")
+    @ApiOperation(value = "Get all the papers from a conference")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Conference not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
+    public ResponseEntity<?> getPapers(@ApiIgnore Principal principal, @PathVariable Integer id) {
+        var conferenceOptional = conferenceRepository.findById(id);
+        CMSUser user = userRepository.getCMSUserByUsername(principal.getName());
+
+        if(conferenceOptional.isEmpty()) {
+            return new ResponseEntity<>("Conference not found", HttpStatus.NOT_FOUND);
+        }
+
+        var conference = conferenceOptional.get();
+
+        if(!Objects.equals(conference.getChair().getId(), user.getId())) {
+            return new ResponseEntity<>("You are not the chair of this conference", HttpStatus.UNAUTHORIZED);
+        }
+
+        Set<PaperInfoDto> result = new HashSet<>();
+
+        for(var paper: conference.getPapers()) {
+            result.add(new PaperInfoDto(paper));
+        }
+
+        return ResponseEntity.ok(result);
+    }
+
 }

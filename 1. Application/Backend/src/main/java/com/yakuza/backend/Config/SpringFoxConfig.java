@@ -65,6 +65,17 @@ public class SpringFoxConfig {
                 .build();
     }
 
+    @Bean Docket paperApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .securityContexts(Arrays.asList(securityContext()))
+                .securitySchemes(Arrays.asList(apiKey()))
+                .groupName("Papers")
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(regex("/paper/.*"))
+                .build();
+    }
+
     private ApiKey apiKey(){
         return new ApiKey("JWT", "Authorization", "header");
     }
