@@ -79,6 +79,11 @@ public class ConferenceController {
 
     @ApiOperation(value = "Update the details of a conference")
     @PutMapping("/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Conference not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
     public ResponseEntity<?> updateConferenceDetails(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestBody ConferenceUpdateRequestDto updateDto) {
         Optional<Conference> conferenceOptional = conferenceRepository.findById(id);
         CMSUser user = userRepository.findByUsername(principal.getName());

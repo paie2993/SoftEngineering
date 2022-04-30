@@ -9,6 +9,7 @@ import com.yakuza.backend.JWTUtils.JWTUserDetailsService;
 import com.yakuza.backend.JWTUtils.TokenManager;
 import com.yakuza.backend.Model.UserModel.*;
 import com.yakuza.backend.Repository.*;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -88,13 +89,22 @@ public class UserController {
         if(userRepository.existsByUsername(request.getUsername())){
             return new ResponseEntity<>("Username is already taken!", HttpStatus.BAD_REQUEST);
         }
-        // TODO: also validate the email and the username
+
         // Password must be between 4 and 8 digits long and include at least one numeric digit.
         Pattern passwordPattern = Pattern.compile("^(?=.*\\d).{4,8}$");
+        Pattern emailPattern = Pattern.compile("^[A-Z0-9][A-Z0-9._%+-]{0,63}@(?:[A-Z0-9-]{1,63}\\.){1,125}[A-Z]{2,63}$");
 
         // check that the password matches the requirements
         if(!passwordPattern.matcher(request.getPassword()).matches()){
             return new ResponseEntity<>("Password must be between 4 and 8 digits long and include at least one numeric digit.", HttpStatus.BAD_REQUEST);
+        }
+
+        if(!emailPattern.matcher(request.getEmail()).matches()) {
+            return new ResponseEntity<>("Invalid email", HttpStatus.BAD_REQUEST);
+        }
+
+        if(request.getUsername().length() < 3) {
+            return new ResponseEntity<>("Username must be longer than 3 characters", HttpStatus.BAD_REQUEST);
         }
 
         // check that the user type exists
