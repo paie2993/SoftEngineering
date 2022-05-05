@@ -28,7 +28,7 @@ public class ConferenceInfoResponseDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm")
     private Date uploadingPaperDeadline;
     private Set<TopicOfInterestDto> topics;
-    // TODO: add sessions to info response
+    private Set<SessionDTO> sessions;
 
     public ConferenceInfoResponseDto(Conference conference) {
         this.id = conference.getId();
@@ -47,6 +47,19 @@ public class ConferenceInfoResponseDto implements Serializable {
                 .stream()
                 .map(TopicOfInterestDto::new)
                 .collect(Collectors.toSet());
+
+        this.sessions = conference.getSessions()
+                .stream()
+                .map(SessionDTO::new)
+                .collect(Collectors.toSet());
+    }
+
+    public void setSessions(Set<SessionDTO> sessions) {
+        this.sessions = sessions;
+    }
+
+    public Set<SessionDTO> getSessions() {
+        return sessions;
     }
 
     public void setId(Integer id) {

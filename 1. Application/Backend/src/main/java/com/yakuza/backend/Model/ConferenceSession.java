@@ -21,4 +21,16 @@ public class ConferenceSession implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "paper_id")
     )
     private Set<Paper> papers;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Conference getConference() {
+        return conference;
+    }
+
+    public Set<Paper> getPapers() {
+        return papers;
+    }
 }

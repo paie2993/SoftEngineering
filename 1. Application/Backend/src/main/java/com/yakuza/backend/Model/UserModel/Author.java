@@ -12,4 +12,8 @@ public class Author extends CMSUser{
     @ManyToMany(mappedBy = "authors")
 
     private Set<Paper> papers;
+
+    public Set<Paper> getPapers() {
+        return papers;
+    }
 }

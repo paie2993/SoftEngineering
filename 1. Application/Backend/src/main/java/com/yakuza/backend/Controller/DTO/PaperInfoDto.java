@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PaperInfoDto implements Serializable {
+    Integer id;
     private String title;
     private String paperAbstract;
     private Set<String> topics;
@@ -16,6 +17,7 @@ public class PaperInfoDto implements Serializable {
     private String status;
 
     public PaperInfoDto(Paper paper) {
+        this.id = paper.getId();
         this.title = paper.getTitle();
         this.paperAbstract = paper.getPaperAbstract();
         this.conferenceId = paper.getConference().getId();
@@ -34,6 +36,14 @@ public class PaperInfoDto implements Serializable {
         for(var author: paper.getAuthors()) {
             this.authors.add(new AuthorDto(author));
         }
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public void setTitle(String title) {

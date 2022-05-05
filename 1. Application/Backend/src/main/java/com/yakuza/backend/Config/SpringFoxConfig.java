@@ -54,14 +54,14 @@ public class SpringFoxConfig {
                 .build();
     }
 
-    @Bean Docket organizerApi() {
+    @Bean Docket authorApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .securityContexts(Arrays.asList(securityContext()))
                 .securitySchemes(Arrays.asList(apiKey()))
-                .groupName("Organizers")
+                .groupName("Authors")
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(regex("/organizer/.*"))
+                .paths(regex("/author/.*"))
                 .build();
     }
 
