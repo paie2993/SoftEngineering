@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/paper/").hasAuthority("AUTHOR")
                 .antMatchers(HttpMethod.PUT, "/{id}/papers/{paperId}/decideOnPaper").hasAuthority("CHAIR")
                 .antMatchers(HttpMethod.PUT, "{id}/sessions/{session_id}/papers").hasAuthority("CHAIR")
+                .antMatchers(HttpMethod.PUT, "/{id}/submissions").hasAuthority("AUTHOR")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)

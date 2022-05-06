@@ -2,9 +2,10 @@ package com.yakuza.backend.Controller;
 
 import com.yakuza.backend.Controller.DTO.AddPaperDto;
 import com.yakuza.backend.Controller.DTO.PaperInfoDto;
-import com.yakuza.backend.Model.Conference;
+import com.yakuza.backend.Controller.DTO.SubmitToConferenceDto;
 import com.yakuza.backend.Model.Keyword;
 import com.yakuza.backend.Model.Paper;
+import com.yakuza.backend.Model.PaperConferenceSubmission;
 import com.yakuza.backend.Model.TopicOfInterest;
 import com.yakuza.backend.Model.UserModel.Author;
 import com.yakuza.backend.Repository.*;
@@ -33,15 +34,17 @@ public class PaperController {
     private final ConferenceRepository conferenceRepository;
     private final AuthorRepository authorRepository;
     private final KeywordRepository keywordRepository;
+    private final PaperConferenceSubmissionRepository paperConferenceSubmissionRepository;
 
 
-    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository) {
+    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository) {
         this.paperRepository = paperRepository;
         this.userRepository = userRepository;
         this.topicRepository = topicRepository;
         this.conferenceRepository = conferenceRepository;
         this.authorRepository = authorRepository;
         this.keywordRepository = keywordRepository;
+        this.paperConferenceSubmissionRepository = paperConferenceSubmissionRepository;
     }
 
     @GetMapping("/")
@@ -63,19 +66,10 @@ public class PaperController {
     })
     @PostMapping("/")
     public ResponseEntity<?> addPaper(@ApiIgnore Principal principal, @RequestBody @Valid AddPaperDto request) {
-        var conferenceOpt = conferenceRepository.findById(request.getConferenceId());
         var author = authorRepository.getByUsername(principal.getName());
-
-        if(conferenceOpt.isEmpty()) {
-            return new ResponseEntity<>("Conference not found", HttpStatus.NOT_FOUND);
-        }
-
-        Conference conference = conferenceOpt.get();
 
         Paper paper = new Paper();
         paper.setPaperAbstract(request.getPaperAbstract());
-        paper.setConference(conference);
-        paper.setStatus("pending");
         paper.setTitle(request.getTitle());
 
         Set<TopicOfInterest> topicOfInterestSet = new HashSet<>();
@@ -134,6 +128,56 @@ public class PaperController {
         paper.setAuthors(authorSet);
 
         paperRepository.save(paper);
+
+        return ResponseEntity.ok("Success");
+    }
+
+    @ApiOperation(value = "Submit a paper to a conference")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @PutMapping("/{id}/submissions")
+    public ResponseEntity<?> submitPaperToConference(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestBody @Valid SubmitToConferenceDto request) {
+        var paperOpt = paperRepository.findById(id);
+        var confOpt = conferenceRepository.findById(request.getConferenceId());
+        var authorOpt = authorRepository.findByUsername(principal.getName());
+
+        if(paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+        if(confOpt.isEmpty()) {
+            return new ResponseEntity<>("Conference not found", HttpStatus.NOT_FOUND);
+        }
+        if(authorOpt.isEmpty()) {
+            return new ResponseEntity<>("Author not found", HttpStatus.NOT_FOUND);
+        }
+
+        var paper = paperOpt.get();
+        var conference = confOpt.get();
+        var author = authorOpt.get();
+
+        // if the author isn't an author of the paper, return forbidden
+
+        if(!paper.getAuthors().contains(author)) {
+            return new ResponseEntity<>("You're not an author of the paper", HttpStatus.FORBIDDEN);
+        }
+
+        // if the paper was already submitted to the conference
+        var submissionOpt = paperConferenceSubmissionRepository.findPaperConferenceSubmissionByConferenceIdAndPaperId(conference.getId(), paper.getId());
+
+        if(submissionOpt.isPresent()) {
+            return new ResponseEntity<>("Paper already submitted to this conference", HttpStatus.BAD_REQUEST);
+        }
+
+
+        // save the new submission to the repo
+        PaperConferenceSubmission paperConferenceSubmission = new PaperConferenceSubmission();
+        paperConferenceSubmission.setConference(conference);
+        paperConferenceSubmission.setPaper(paper);
+        paperConferenceSubmission.setStatus("pending");
+
+        paperConferenceSubmissionRepository.save(paperConferenceSubmission);
 
         return ResponseEntity.ok("Success");
     }

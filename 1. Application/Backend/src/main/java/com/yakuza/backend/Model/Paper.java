@@ -12,6 +12,60 @@ import java.util.Set;
 @Entity
 @Table(schema = "dbo", name = "Papers")
 public class Paper implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    @NotNull
+    private String title;
+    private String paperAbstract;
+    private String cameraCopyUrl;
+    private String fullCopyUrl;
+    @OneToMany(mappedBy = "paper")
+    Set<PaperConferenceSubmission> submissions;
+    @ManyToMany
+    @JoinTable(
+            name = "Papers_Topics",
+            joinColumns = @JoinColumn(name = "paper_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
+    )
+    private Set<TopicOfInterest> topicsOfInterest;
+    @ManyToMany
+    @JoinTable(
+            name = "Papers_Keywords",
+            joinColumns = @JoinColumn(name = "paper_id"),
+            inverseJoinColumns = @JoinColumn(name = "keyword_id")
+    )
+    private Set<Keyword> keywords;
+    @ManyToMany
+    @JoinTable(
+            name = "Authors_Papers",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "paper_id")
+    )
+    private Set<Author> authors;
+    @ManyToMany(mappedBy = "papers")
+    private Set<ConferenceSession> conferenceSessions;
+    @OneToMany(mappedBy = "paper")
+    private Set<ConflictOfInterest> conflictsOfInterest;
+    @OneToMany(mappedBy = "paper")
+    private Set<BidForPaper> bidsForPaper;
+    @ManyToMany(mappedBy = "assignedPapers")
+    private Set<Reviewer> reviewers;
+    @OneToMany(mappedBy = "paper")
+    private Set<PaperComment> paperComments;
+    @OneToMany(mappedBy = "paper")
+    private Set<ChairEvaluation> chairEvaluations;
+    @OneToMany(mappedBy = "paper")
+    private Set<ReviewerEvaluation> reviewerEvaluations;
+
+    public Set<PaperConferenceSubmission> getSubmissions() {
+        return submissions;
+    }
+
+    public void setSubmissions(Set<PaperConferenceSubmission> submissions) {
+        this.submissions = submissions;
+    }
+
     public Set<TopicOfInterest> getTopicsOfInterest() {
         return topicsOfInterest;
     }
@@ -64,20 +118,12 @@ public class Paper implements Serializable {
         this.paperAbstract = paperAbstract;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public void setCameraCopyUrl(String cameraCopyUrl) {
         this.cameraCopyUrl = cameraCopyUrl;
     }
 
     public void setFullCopyUrl(String fullCopyUrl) {
         this.fullCopyUrl = fullCopyUrl;
-    }
-
-    public void setConference(Conference conference) {
-        this.conference = conference;
     }
 
     public Integer getId() {
@@ -92,10 +138,6 @@ public class Paper implements Serializable {
         return paperAbstract;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public String getCameraCopyUrl() {
         return cameraCopyUrl;
     }
@@ -103,59 +145,6 @@ public class Paper implements Serializable {
     public String getFullCopyUrl() {
         return fullCopyUrl;
     }
-
-    public Conference getConference() {
-        return conference;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-    @NotNull
-    private String title;
-    private String paperAbstract;
-    @NotNull
-    private String status;
-    private String cameraCopyUrl;
-    private String fullCopyUrl;
-    @ManyToOne
-    @JoinColumn(name = "Conference_id", nullable = false)
-    private Conference conference;
-    @ManyToMany
-    @JoinTable(
-            name = "Papers_Topics",
-            joinColumns = @JoinColumn(name = "paper_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id")
-    )
-    private Set<TopicOfInterest> topicsOfInterest;
-    @ManyToMany
-    @JoinTable(
-            name = "Papers_Keywords",
-            joinColumns = @JoinColumn(name = "paper_id"),
-            inverseJoinColumns = @JoinColumn(name = "keyword_id")
-    )
-    private Set<Keyword> keywords;
-    @ManyToMany
-    @JoinTable(
-            name = "Authors_Papers",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "paper_id")
-    )
-    private Set<Author> authors;
-    @ManyToMany(mappedBy = "papers")
-    private Set<ConferenceSession> conferenceSessions;
-    @OneToMany(mappedBy = "paper")
-    private Set<ConflictOfInterest> conflictsOfInterest;
-    @OneToMany(mappedBy = "paper")
-    private Set<BidForPaper> bidsForPaper;
-    @ManyToMany(mappedBy = "assignedPapers")
-    private Set<Reviewer> reviewers;
-    @OneToMany(mappedBy = "paper")
-    private Set<PaperComment> paperComments;
-    @OneToMany(mappedBy = "paper")
-    private Set<ChairEvaluation> chairEvaluations;
-    @OneToMany(mappedBy = "paper")
-    private Set<ReviewerEvaluation> reviewerEvaluations;
 
     public void setTopicsOfInterest(Set<TopicOfInterest> topicsOfInterest) {
         this.topicsOfInterest = topicsOfInterest;

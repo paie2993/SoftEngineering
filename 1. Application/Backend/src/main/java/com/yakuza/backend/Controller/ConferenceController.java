@@ -31,13 +31,15 @@ public class ConferenceController {
     private final TopicRepository topicRepository;
     private final PaperRepository paperRepository;
     private final ConferenceSessionRepository conferenceSessionRepository;
+    private final PaperConferenceSubmissionRepository paperConferenceSubmissionRepository;
 
-    public ConferenceController(ConferenceRepository conferenceRepository, UserRepository userRepository, TopicRepository topicRepository, PaperRepository paperRepository, ConferenceSessionRepository conferenceSessionRepository) {
+    public ConferenceController(ConferenceRepository conferenceRepository, UserRepository userRepository, TopicRepository topicRepository, PaperRepository paperRepository, ConferenceSessionRepository conferenceSessionRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository) {
         this.conferenceRepository = conferenceRepository;
         this.userRepository = userRepository;
         this.topicRepository = topicRepository;
         this.paperRepository = paperRepository;
         this.conferenceSessionRepository = conferenceSessionRepository;
+        this.paperConferenceSubmissionRepository = paperConferenceSubmissionRepository;
     }
 
     @ApiOperation(value = "Get all conferences")
@@ -176,26 +178,29 @@ public class ConferenceController {
             @ApiResponse(code = 503, message = "Unauthorized")
     })
     public ResponseEntity<?> getPapers(@ApiIgnore Principal principal, @PathVariable Integer id) {
-        var conferenceOptional = conferenceRepository.findById(id);
-        CMSUser user = userRepository.getCMSUserByUsername(principal.getName());
+        Optional<Conference> conferenceOptional = conferenceRepository.findById(id);
+        CMSUser user = userRepository.findByUsername(principal.getName());
 
+        // if the conference wasn't found, return 404
         if(conferenceOptional.isEmpty()) {
             return new ResponseEntity<>("Conference not found", HttpStatus.NOT_FOUND);
         }
 
-        var conference = conferenceOptional.get();
+        // if the user isn't the chair of the conference, return unauthorized
+        Conference conference = conferenceOptional.get();
 
         if(!Objects.equals(conference.getChair().getId(), user.getId())) {
             return new ResponseEntity<>("You are not the chair of this conference", HttpStatus.UNAUTHORIZED);
         }
 
-        Set<PaperInfoDto> result = new HashSet<>();
+        var submissions = conference.getSubmissions();
+        Set<PaperSubmissionsDto> paperSubmissionsDtos = new HashSet<>();
 
-        for(var paper: conference.getPapers()) {
-            result.add(new PaperInfoDto(paper));
+        for(var sub: submissions) {
+            paperSubmissionsDtos.add(new PaperSubmissionsDto(sub));
         }
 
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(paperSubmissionsDtos);
     }
 
     @PostMapping("{id}/sessions/{session_id}/papers")
@@ -206,52 +211,50 @@ public class ConferenceController {
             @ApiResponse(code = 503, message = "Unauthorized")
     })
     public ResponseEntity<?> assignPaperToSession(@ApiIgnore Principal principal, @PathVariable Integer id, @PathVariable Integer session_id, @RequestBody AddPaperToSessionDto dto) {
-        var conferenceOptional = conferenceRepository.findById(id);
-        CMSUser user = userRepository.getCMSUserByUsername(principal.getName());
+        Optional<Conference> conferenceOptional = conferenceRepository.findById(id);
+        CMSUser user = userRepository.findByUsername(principal.getName());
 
+        // if the conference wasn't found, return 404
         if(conferenceOptional.isEmpty()) {
             return new ResponseEntity<>("Conference not found", HttpStatus.NOT_FOUND);
         }
 
-        var conference = conferenceOptional.get();
+        // if the user isn't the chair of the conference, return unauthorized
+        Conference conference = conferenceOptional.get();
 
         if(!Objects.equals(conference.getChair().getId(), user.getId())) {
             return new ResponseEntity<>("You are not the chair of this conference", HttpStatus.UNAUTHORIZED);
         }
 
-        var paperOptional = paperRepository.findById(dto.getPaperId());
+        var sessionOpt = conferenceSessionRepository.findConferenceSessionByIdAndConferenceId(session_id, id);
 
-        if(paperOptional.isEmpty()) {
-            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        if(sessionOpt.isEmpty()) {
+            return new ResponseEntity<>("Session not found", HttpStatus.NOT_FOUND);
         }
 
-        var paper = paperOptional.get();
+        var subOpt = paperConferenceSubmissionRepository.findPaperConferenceSubmissionByConferenceIdAndPaperId(id, dto.getPaperId());
 
-        if(!Objects.equals(paper.getConference().getId(), conference.getId())) {
-            return new ResponseEntity<>("Paper doesn't belong to conference", HttpStatus.FORBIDDEN);
+        // if the submission for the paper doesn't exist
+        if(subOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper was not submitted to this conference", HttpStatus.BAD_REQUEST);
         }
 
-        var sessionOptional = conferenceSessionRepository.findById(session_id);
-
-        if(sessionOptional.isEmpty()) {
-            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        var submission = subOpt.get();
+        System.out.println(submission.getStatus());
+        // if the submission isn't accepted
+        if(!Objects.equals(submission.getStatus(), "accepted")) {
+            return new ResponseEntity<>("Paper was not accepted", HttpStatus.BAD_REQUEST);
         }
 
-        var session = sessionOptional.get();
+        var session = sessionOpt.get();
+        var paper = submission.getPaper();
 
-        if(!Objects.equals(session.getConference().getId(), conference.getId())) {
-            return new ResponseEntity<>("Session not in provided conference", HttpStatus.FORBIDDEN);
-        }
-
-        if(!paper.getConferenceSessions().isEmpty()) {
-            return new ResponseEntity<>("Paper already assigned to a session", HttpStatus.BAD_REQUEST);
-        }
-
-        if(!paper.getStatus().equals("accepted")) {
-            return new ResponseEntity<>("Paper has not been accepted", HttpStatus.BAD_REQUEST);
+        if(session.getPapers().contains(paper)) {
+            return new ResponseEntity<>("Paper already submitted to conference", HttpStatus.BAD_REQUEST);
         }
 
         session.getPapers().add(paper);
+
         conferenceSessionRepository.save(session);
 
         return ResponseEntity.ok("Success");
@@ -265,42 +268,42 @@ public class ConferenceController {
             @ApiResponse(code = 503, message = "Unauthorized")
     })
     public ResponseEntity<?> decideOnPaper(@ApiIgnore Principal principal, @PathVariable Integer id, @PathVariable Integer paperId, @RequestBody StatusDecisionDto status) {
-        var conferenceOptional = conferenceRepository.findById(id);
-        CMSUser user = userRepository.getCMSUserByUsername(principal.getName());
+        Optional<Conference> conferenceOptional = conferenceRepository.findById(id);
+        CMSUser user = userRepository.findByUsername(principal.getName());
 
+        // if the conference wasn't found, return 404
         if(conferenceOptional.isEmpty()) {
             return new ResponseEntity<>("Conference not found", HttpStatus.NOT_FOUND);
         }
 
-        var conference = conferenceOptional.get();
+        // if the user isn't the chair of the conference, return unauthorized
+        Conference conference = conferenceOptional.get();
 
         if(!Objects.equals(conference.getChair().getId(), user.getId())) {
             return new ResponseEntity<>("You are not the chair of this conference", HttpStatus.UNAUTHORIZED);
         }
 
-        var paperOptional = paperRepository.findById(paperId);
+        var subOpt = paperConferenceSubmissionRepository.findPaperConferenceSubmissionByConferenceIdAndPaperId(id, paperId);
 
-        if(paperOptional.isEmpty()) {
+        if(subOpt.isEmpty()) {
             return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
         }
 
-        var paper = paperOptional.get();
+        var sub = subOpt.get();
 
-        if(!Objects.equals(paper.getConference().getId(), conference.getId())) {
-            return new ResponseEntity<>("Paper doesn't belong to conference", HttpStatus.FORBIDDEN);
+        System.out.println(sub.getStatus());
+
+        if(!Objects.equals(sub.getStatus(), "pending")) {
+            return new ResponseEntity<>("Paper already decided upon", HttpStatus.BAD_REQUEST);
         }
 
-        if (!Objects.equals(paper.getStatus(), "pending")) {
-            return new ResponseEntity<>("Paper's status has already been decided upon", HttpStatus.FORBIDDEN);
-        }
+        if(Objects.equals(status.getContent(), "accepted")) {
+            sub.setStatus("accepted");
+        } else if(Objects.equals(status.getContent(), "rejected")) {
+            sub.setStatus("rejected");
+        } else return new ResponseEntity<>("Invalid status", HttpStatus.BAD_REQUEST);
 
-        if(Objects.equals(status.getContent(), "rejected")) {
-            paper.setStatus("rejected");
-        } else if (status.getContent().equals("accepted")) {
-            paper.setStatus("accepted");
-        } else return new ResponseEntity<>("Invalid status: can only be accepted/rejected", HttpStatus.BAD_REQUEST);
-
-        paperRepository.save(paper);
+        paperConferenceSubmissionRepository.save(sub);
 
         return ResponseEntity.ok("Success");
     }

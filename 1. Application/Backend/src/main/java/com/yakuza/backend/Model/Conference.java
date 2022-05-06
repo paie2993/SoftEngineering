@@ -41,17 +41,16 @@ public class Conference implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "topic_id")
     )
     private Set<TopicOfInterest> topicsOfInterest;
-
-    public void setPapers(Set<Paper> papers) {
-        this.papers = papers;
-    }
-
-    public Set<Paper> getPapers() {
-        return papers;
-    }
-
     @OneToMany(mappedBy = "conference")
-    private Set<Paper> papers;
+    private Set<PaperConferenceSubmission> submissions;
+
+    public Set<PaperConferenceSubmission> getSubmissions() {
+        return submissions;
+    }
+
+    public void setSubmissions(Set<PaperConferenceSubmission> submissions) {
+        this.submissions = submissions;
+    }
 
     public void setId(Integer id) {
         this.id = id;

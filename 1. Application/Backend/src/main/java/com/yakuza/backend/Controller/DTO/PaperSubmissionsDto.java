@@ -1,21 +1,25 @@
 package com.yakuza.backend.Controller.DTO;
 
 import com.yakuza.backend.Model.Paper;
+import com.yakuza.backend.Model.PaperConferenceSubmission;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-public class PaperInfoDto implements Serializable {
+public class PaperSubmissionsDto implements Serializable {
     Integer id;
     private String title;
     private String paperAbstract;
     private Set<String> topics;
     private Set<String> keywords;
     private Set<AuthorDto> authors;
-    private Set<SubmissionStatusDto> submissions;
+    private String status;
 
-    public PaperInfoDto(Paper paper) {
+    public PaperSubmissionsDto(PaperConferenceSubmission paperConferenceSubmission) {
+        var paper = paperConferenceSubmission.getPaper();
+
+        this.status = paperConferenceSubmission.getStatus();
         this.id = paper.getId();
         this.title = paper.getTitle();
         this.paperAbstract = paper.getPaperAbstract();
@@ -23,7 +27,6 @@ public class PaperInfoDto implements Serializable {
         this.topics = new HashSet<>();
         this.keywords = new HashSet<>();
         this.authors = new HashSet<>();
-        this.submissions = new HashSet<>();
 
         for(var topic: paper.getTopicsOfInterest()) {
             this.topics.add(topic.getDescription());
@@ -34,17 +37,6 @@ public class PaperInfoDto implements Serializable {
         for(var author: paper.getAuthors()) {
             this.authors.add(new AuthorDto(author));
         }
-        for(var sub: paper.getSubmissions()) {
-            this.submissions.add(new SubmissionStatusDto(sub));
-        }
-    }
-
-    public Set<SubmissionStatusDto> getSubmissionStatusDtos() {
-        return submissions;
-    }
-
-    public void setSubmissionStatusDtos(Set<SubmissionStatusDto> submissionStatusDtos) {
-        this.submissions = submissionStatusDtos;
     }
 
     public void setId(Integer id) {
@@ -93,5 +85,13 @@ public class PaperInfoDto implements Serializable {
 
     public Set<AuthorDto> getAuthors() {
         return authors;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

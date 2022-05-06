@@ -15,16 +15,6 @@ public class AddPaperDto implements Serializable {
     private Set<String> keywords;
     @NotNull
     private Set<String> otherAuthors;
-    @NotNull
-    private Integer conferenceId;
-
-    public void setConferenceId(Integer conferenceId) {
-        this.conferenceId = conferenceId;
-    }
-
-    public Integer getConferenceId() {
-        return conferenceId;
-    }
 
     public void setTitle(String title) {
         this.title = title;
