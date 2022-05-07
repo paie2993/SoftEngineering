@@ -51,7 +51,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**").permitAll()
-                .antMatchers("/hello").hasAnyAuthority("AUTHOR", "CHAIR")
                 .antMatchers(HttpMethod.PUT ,"/conference/{id}").hasAuthority("CHAIR")
                 .antMatchers(HttpMethod.GET, "/conference/{id}/papers").hasAuthority("CHAIR")
                 .antMatchers(HttpMethod.GET, "/paper/").hasAuthority("REVIEWER")
@@ -59,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/{id}/papers/{paperId}/decideOnPaper").hasAuthority("CHAIR")
                 .antMatchers(HttpMethod.PUT, "{id}/sessions/{session_id}/papers").hasAuthority("CHAIR")
                 .antMatchers(HttpMethod.PUT, "/{id}/submissions").hasAuthority("AUTHOR")
+                .antMatchers("/reviewer/**").hasAuthority("REVIEWER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)

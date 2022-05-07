@@ -291,12 +291,6 @@ public class ConferenceController {
 
         var sub = subOpt.get();
 
-        System.out.println(sub.getStatus());
-
-        if(!Objects.equals(sub.getStatus(), "pending")) {
-            return new ResponseEntity<>("Paper already decided upon", HttpStatus.BAD_REQUEST);
-        }
-
         if(Objects.equals(status.getContent(), "accepted")) {
             sub.setStatus("accepted");
         } else if(Objects.equals(status.getContent(), "rejected")) {

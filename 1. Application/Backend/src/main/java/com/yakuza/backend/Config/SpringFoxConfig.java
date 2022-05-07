@@ -31,18 +31,6 @@ public class SpringFoxConfig {
                 .build();
     }
 
-    @Bean
-    public Docket helloApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .securityContexts(Arrays.asList(securityContext()))
-                .securitySchemes(Arrays.asList(apiKey()))
-                .groupName("Hello")
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(regex("/hello"))
-                .build();
-    }
-
     @Bean Docket conferenceApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .securityContexts(Arrays.asList(securityContext()))
@@ -73,6 +61,17 @@ public class SpringFoxConfig {
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(regex("/paper/.*"))
+                .build();
+    }
+
+    @Bean Docket reviewerApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .securityContexts(Arrays.asList(securityContext()))
+                .securitySchemes(Arrays.asList(apiKey()))
+                .groupName("Reviewers")
+                .select()
+                .apis(RequestHandlerSelectors.any())
+                .paths(regex("/reviewer/.*"))
                 .build();
     }
 

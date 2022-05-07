@@ -30,4 +30,52 @@ public class Reviewer extends CMSUser{
     private Set<PaperComment> paperComments;
     @OneToMany(mappedBy = "reviewer")
     private Set<ReviewerEvaluation> reviewerEvaluations;
+
+    public Set<TopicOfInterest> getTopicsOfInterest() {
+        return topicsOfInterest;
+    }
+
+    public void setTopicsOfInterest(Set<TopicOfInterest> topicsOfInterest) {
+        this.topicsOfInterest = topicsOfInterest;
+    }
+
+    public Set<ConflictOfInterest> getConflictsOfInterest() {
+        return conflictsOfInterest;
+    }
+
+    public void setConflictsOfInterest(Set<ConflictOfInterest> conflictsOfInterest) {
+        this.conflictsOfInterest = conflictsOfInterest;
+    }
+
+    public Set<BidForPaper> getBidsForPaper() {
+        return bidsForPaper;
+    }
+
+    public void setBidsForPaper(Set<BidForPaper> bidsForPaper) {
+        this.bidsForPaper = bidsForPaper;
+    }
+
+    public Set<Paper> getAssignedPapers() {
+        return assignedPapers;
+    }
+
+    public void setAssignedPapers(Set<Paper> assignedPapers) {
+        this.assignedPapers = assignedPapers;
+    }
+
+    public Set<PaperComment> getPaperComments() {
+        return paperComments;
+    }
+
+    public void setPaperComments(Set<PaperComment> paperComments) {
+        this.paperComments = paperComments;
+    }
+
+    public Set<ReviewerEvaluation> getReviewerEvaluations() {
+        return reviewerEvaluations;
+    }
+
+    public void setReviewerEvaluations(Set<ReviewerEvaluation> reviewerEvaluations) {
+        this.reviewerEvaluations = reviewerEvaluations;
+    }
 }

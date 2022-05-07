@@ -23,20 +23,10 @@ import java.util.Set;
 @Validated
 @RequestMapping("/author")
 public class AuthorController {
-    private final PaperRepository paperRepository;
-    private final UserRepository userRepository;
-    private final TopicRepository topicRepository;
-    private final ConferenceRepository conferenceRepository;
     private final AuthorRepository authorRepository;
-    private final KeywordRepository keywordRepository;
 
-    public AuthorController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository) {
-        this.paperRepository = paperRepository;
-        this.userRepository = userRepository;
-        this.topicRepository = topicRepository;
-        this.conferenceRepository = conferenceRepository;
+    public AuthorController(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
-        this.keywordRepository = keywordRepository;
     }
 
     @GetMapping("/")
