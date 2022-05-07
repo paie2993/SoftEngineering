@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { HeroSection } from '../../components/HeroSection';
+import { PapersHS } from '../../components/PapersHS';
 import { Sidebar } from '../../components/Sidebar';
 import './AllPapers.css'
 
-export const AllPapers = () => {
+export const AllPapers = (props) => {
 
     return (
         <React.Fragment>
             <div class="ap-layout">
                 <Sidebar />
-                <HeroSection accepted={false}/>
+                <PapersHS accepted={false}/>
             </div>
         </React.Fragment>
     )

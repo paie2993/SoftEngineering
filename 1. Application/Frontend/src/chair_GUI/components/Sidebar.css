@@ -6,7 +6,18 @@
   height: 100vh;
   width: 280px;
   padding: 10px 10px 10px 10px;
-  box-shadow: rgba(100, 100, 111, 0.158) 0px 7px 29px 0px;
+  /* box-shadow: rgba(83, 83, 92, 0.158) 0px 7px 29px 0px;  */
+  box-shadow: rgba(0, 0, 0, 0.24) 1px 3px 8px;
+}
+
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-decoration: none;
 }
 
 .home-section {
@@ -31,7 +42,7 @@
 .home {
   font-size: 30px;
   font-family: "Bebas Neue", cursive;
-  color: #5a6377;
+  color: #66779ce9;
 }
 
 .menu {
@@ -60,5 +71,5 @@
   margin-top: 30px;
   font-size: 30px;
   font-family: "Bebas Neue", cursive;
-  color: #5a6377;
+  color: #66779ce9;
 }
