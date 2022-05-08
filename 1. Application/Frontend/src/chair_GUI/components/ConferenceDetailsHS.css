@@ -1,0 +1,151 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 10px 10px 50px;
+  }
+
+.table-section {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+
+.container{
+    margin-top: 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    font-family: "Anek Telugu", sans-serif;
+}
+
+.details {
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    height: 500px;
+}
+
+.conf-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.info-text {
+    width: 100px;
+    height: 40px;
+    font-size: 24px;
+    font-weight: 600;
+    align-items: center;
+    color: #413f3d;
+}
+
+input {
+    font-family: "Anek Telugu", sans-serif;
+    padding-left: 20px;
+    font-size: 18px;
+    justify-content: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.info-input {
+    margin-left: 10px;
+    background-color: transparent;
+    height: 35px;
+    width: 600px;
+    border: 2px solid #d8d0d0;
+    border-radius: 4px;
+}
+
+.organizer-area {
+    display: flex;
+    flex-direction: row;
+}
+
+.organizer-info {
+    margin-top: 25px;
+    margin-left: 10px;
+    height: 220px;
+    width: 620px;
+    border: 2px solid #d8d0d0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 1px 3px 8px;
+}
+
+.org-info {
+    display: flex;
+    flex-direction: row;
+    margin-left: 20px;
+    align-items: center;
+}
+
+.org-info-text {
+    font-size: 18px;
+    align-items: center;
+    width: 120px;
+    height: 30px;
+    font-weight: 600;
+    color: #413f3d;
+}
+
+.org-input {
+    margin-left: 10px;
+    background-color: transparent;
+    height: 25px;
+    width: 410px;
+    border: 2px solid #d8d0d0;
+    border-radius: 4px;
+}
+
+.topics-area {
+    display: flex;
+    flex-direction: column;
+}
+
+.topics {
+    height: 250px;
+    width: 300px;
+    margin-top: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.topic-input {
+    margin-top: 5px;
+    background-color: transparent;
+    height: 30px;
+    width: 275px;
+    border: 2px solid #d8d0d0;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.detail-btn {
+    margin-top: 20px;
+    padding: 18px 10px 15px 10px;
+    width: 190px;
+    color: #66779ce9;
+    border: 1px solid #d8d0d0;
+    border-radius: 4px;
+    font-family: "Anek Telugu", sans-serif;
+    font-family: "Bebas Neue", cursive;
+    font-size: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+
+.detail-btn:hover {
+    cursor: pointer;
+    background-color: #d8d0d0;
+    transition: 0.2s;
+    box-shadow: rgba(100, 100, 111, 0.158) 0px 7px 29px 0px;
+}
+
+.btn-area {
+    display: flex;
+    flex-direction: column-reverse;
+    height: 200px;
+    width: 100%;
+}

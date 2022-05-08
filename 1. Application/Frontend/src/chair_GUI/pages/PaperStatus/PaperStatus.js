@@ -7,8 +7,6 @@ import './PaperStatus.css'
 
 export const PaperStatus = () => {
 
-    const paper = JSON.parse(localStorage.getItem('selectedPaper'));
-    console.log(paper)
     return (
         <React.Fragment>
             <div class="ap-layout">

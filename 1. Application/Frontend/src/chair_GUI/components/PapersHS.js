@@ -30,17 +30,38 @@ export const PapersHS = (props) => {
       }
     }, [accepted])
 
+    function enableButtons(item) {
+      const btn1 = document.getElementById("btn-assign");
+      if (item.status === "accepted"){
+        btn1.disabled = false;
+      }
+      else {
+        btn1.disabled = true;
+      }
+      const btn2 = document.getElementById("btn-status");
+      btn2.disabled = false;
+    }
+
+    useEffect(() => {
+      if (paper != null) {
+        enableButtons(paper);
+        localStorage.setItem("selectedPaper", JSON.stringify(paper));
+      }
+    }, [paper])
+
     return (
         <React.Fragment>
         <div className="hero">
             <HeaderText text={`${accepted ? 'Accepted Papers' : 'Papers'}`} />
             <div className="table-section">
-              <Table 
-              accepted={accepted}
-              content={papers}
-              columns={columns}
-              selected={[paper, setPaper]}
-              />
+              <div className="table">
+                <Table 
+                  accepted={accepted}
+                  content={papers}
+                  columns={columns}
+                  selected={[paper, setPaper]}
+                  />
+              </div>
               <div className="button-area">
                 <Link to={`${accepted ? '/' : '/accepted'}`} className="noSelect">
                   <button className="button" >

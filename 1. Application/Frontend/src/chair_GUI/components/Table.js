@@ -10,21 +10,20 @@ export const Table = (props) => {
     const columns = props.columns;
     const accepted = props.accepted;
     
-    const [shownPapers, setShownPapers] = useState([]);
+    const [shownContent, setShownContent] = useState([]);
 
     function filterPapersByStatus() {
       const result = papers.filter(paper => paper.status === "accepted");
-      console.log(result);
       return result;
     }
 
     useEffect(() => {
         if (accepted === true) {
           const acceptedPapers = filterPapersByStatus();
-          setShownPapers(acceptedPapers);
+          setShownContent(acceptedPapers);
         }
         else {
-          setShownPapers(papers);
+          setShownContent(papers);
         }
       }, [papers, accepted])
 
@@ -43,28 +42,22 @@ export const Table = (props) => {
     const [selectedItem, setSelectedItem] = props.selected;
 
     return (
-        <>
-        <div className="table">   
+        <> 
             <ThemeProvider theme={theme}>
                 <DataGrid
-                rows={shownPapers}
+                rows={shownContent}
                 columns={columns}
                 pageSize={7}
                 rowsPerPageOptions={[7]}
                 selectionModel={selection}
                 onSelectionModelChange={(newSelection) => {
                     setSelection(newSelection[0]);
-                    const btn1 = document.getElementById("btn-assign");
-                    btn1.disabled = false;
-                    const btn2 = document.getElementById("btn-status");
-                    btn2.disabled = false;
-                    const item = shownPapers.find(el => el.id == newSelection[0])
+                    const item = shownContent.find(el => el.id === newSelection[0])
                     setSelectedItem(item);
-                    localStorage.setItem("selectedPaper", JSON.stringify(item));
+                    //enableButtons(item);
                   }}
                 />
             </ThemeProvider> 
-        </div>
         </>
     )
 }

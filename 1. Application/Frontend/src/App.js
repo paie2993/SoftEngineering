@@ -7,6 +7,7 @@ import { PersonalInfo } from './chair_GUI/pages/PersonalInfo/PersonalInfo';
 import { AllConferences } from './chair_GUI/pages/AllConferences/AllConferences'
 import { PaperStatus } from './chair_GUI/pages/PaperStatus/PaperStatus';
 import { useState } from 'react';
+import { ConferenceDetails } from './chair_GUI/pages/ConferenceDetails/ConferenceDetails';
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
           <Route path="/personalinfo" element={<PersonalInfo />}/>
           <Route path="/conferences" element={ <AllConferences />}/>
           <Route path="/paperstatus" element={ <PaperStatus/>}/>
+          <Route path="/conferencedetails" element={ <ConferenceDetails/>}/>
         </Routes>
       </BrowserRouter>
     </>
