@@ -1,0 +1,131 @@
+.topicsContainer {
+    padding: 5px 4%;
+    background-color: rgb(250, 250, 250);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 80%;
+    height: 100%;
+    font-size: 1.2em;
+}
+
+.topicsHeader {
+    padding: 0px 15px;
+    border: 5px solid black;
+    border-radius: 2%;
+    background-color:rgb(234, 234, 234);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 50%;
+    height: 10%;
+    font-size: 2em;
+}
+
+.separator {
+    margin: 25px 0 25px;
+    background-image: linear-gradient(to right, rgb(25, 72, 113), rgb(76, 129, 175), rgb(25, 72, 113));
+    width: 100%;
+    height: 3px;
+}
+
+.topicsContent {
+    margin-top: 25px;
+    padding: 3%;
+    border-radius: 1%;
+    background-color: rgb(242, 242, 242); 
+    display: flex;
+    flex-direction: row;
+    justify-items: flex-start;
+    align-items: flex-start;
+    width: 94%;
+    height: 70%;
+}
+
+.topicListDiv {
+    border: 2px solid grey;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 75%;
+    height: auto;
+}
+
+.topicDiv {
+    margin: 10px;
+    border: 1px solid lightgrey;
+    padding: 4px 10px;
+    background-color: rgb(211, 219, 231);
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 90%;
+    height: auto;
+}
+
+.topicHeader {
+    background-color: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 95%;
+}
+
+.deleteX {
+    background-color: inherit;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: auto;
+    color: red;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.tableDataDescription {
+    text-align: justify;
+}
+
+.tableModifiers {
+    margin-left: 4%;
+    border-radius: 1%;
+    background-color: rgb(229, 229, 229);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 20%;
+    height: 100%;
+}
+
+.addSelect {
+    margin-top: 20%;
+    border: 2px solid black;
+    border-radius: 5%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    height: auto;
+}
+
+.addSelect:hover {
+    background-color: rgb(205, 205, 205);
+}
+
+.topicDiv:hover {
+    background-color: rgb(182, 189, 200);
+}
+
+.deleteX:hover {
+    color: purple;
+}

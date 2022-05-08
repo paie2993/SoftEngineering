@@ -1,0 +1,17 @@
+{
+    "topics": [
+        {
+            "id": 1,
+            "name": "Topic1 name",
+            "description": "Topic1 description"
+        }, {
+            "id": 2,
+            "name": "Topic2 name",
+            "description": "Topic2 description"
+        }, {
+            "id": 3, 
+            "name": "Topic3 name",
+            "description": "Topic3 description"
+        }
+    ]
+}
