@@ -1,9 +1,6 @@
 package com.yakuza.backend.Controller;
 
-import com.yakuza.backend.Controller.DTO.AddPaperDto;
-import com.yakuza.backend.Controller.DTO.BidDto;
-import com.yakuza.backend.Controller.DTO.PaperInfoDto;
-import com.yakuza.backend.Controller.DTO.SubmitToConferenceDto;
+import com.yakuza.backend.Controller.DTO.*;
 import com.yakuza.backend.Model.*;
 import com.yakuza.backend.Model.UserModel.Author;
 import com.yakuza.backend.Repository.*;
@@ -16,9 +13,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -34,9 +33,10 @@ public class PaperController {
     private final PaperConferenceSubmissionRepository paperConferenceSubmissionRepository;
     private final ReviewerRepository reviewerRepository;
     private final BidForPaperRepository bidForPaperRepository;
+    private final ConflictOfInterestRepository conflictOfInterestRepository;
 
 
-    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, ReviewerRepository reviewerRepository, BidForPaperRepository bidForPaperRepository) {
+    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, ReviewerRepository reviewerRepository, BidForPaperRepository bidForPaperRepository, ConflictOfInterestRepository conflictOfInterestRepository) {
         this.paperRepository = paperRepository;
         this.topicRepository = topicRepository;
         this.conferenceRepository = conferenceRepository;
@@ -45,6 +45,7 @@ public class PaperController {
         this.paperConferenceSubmissionRepository = paperConferenceSubmissionRepository;
         this.reviewerRepository = reviewerRepository;
         this.bidForPaperRepository = bidForPaperRepository;
+        this.conflictOfInterestRepository = conflictOfInterestRepository;
     }
 
     @GetMapping("/")
@@ -215,4 +216,59 @@ public class PaperController {
 
         return ResponseEntity.ok("Success");
     }
+
+    @ApiOperation(value = "Add a conflict of interest to a paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @Transactional
+    @PostMapping("/{id}/conflicts")
+    public ResponseEntity<?> addConflict(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestBody AddConflictDTO dto) {
+        var reviewerOpt = reviewerRepository.findByUsername(principal.getName());
+        var paperOpt = paperRepository.findById(id);
+
+        if(paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+        if(reviewerOpt.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        if(dto.getDescription() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        var reviewer = reviewerOpt.get();
+        var paper = paperOpt.get();
+
+        bidForPaperRepository.deleteAllByReviewerIdAndPaperId(reviewer.getId(), id);
+
+        ConflictOfInterest conflictOfInterest = new ConflictOfInterest();
+        conflictOfInterest.setReviewer(reviewer);
+        conflictOfInterest.setPaper(paper);
+        conflictOfInterest.setDescription(dto.getDescription());
+
+        var ass_papers = reviewer.getAssignedPapers();
+        ass_papers.remove(paper);
+        reviewer.setAssignedPapers(ass_papers);
+        reviewerRepository.save(reviewer);
+
+        conflictOfInterestRepository.save(conflictOfInterest);
+
+        Optional<BidForPaper> bid_opt = bidForPaperRepository.findTopByPaperIdOrderByInterestDesc(paper.getId());
+
+        if(bid_opt.isPresent()) {
+            var bid = bid_opt.get();
+            var new_reviewer = bid.getReviewer();
+            var paperSet = new_reviewer.getAssignedPapers();
+
+            paperSet.add(bid.getPaper());
+            new_reviewer.setAssignedPapers(paperSet);
+            reviewerRepository.save(new_reviewer);
+        }
+
+        return ResponseEntity.ok("Success");
+    }
+
 }

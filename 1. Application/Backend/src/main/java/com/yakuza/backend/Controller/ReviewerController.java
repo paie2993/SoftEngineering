@@ -1,5 +1,6 @@
 package com.yakuza.backend.Controller;
 
+import com.yakuza.backend.Controller.DTO.PaperInfoDto;
 import com.yakuza.backend.Controller.DTO.ReviewerTopicOfInterestDto;
 import com.yakuza.backend.Controller.DTO.TopicOfInterestDto;
 import com.yakuza.backend.Model.TopicOfInterest;
@@ -95,5 +96,32 @@ public class ReviewerController {
         reviewerRepository.save(reviewer);
 
         return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping("/papers")
+    @ApiOperation("Get the papers assigned to review")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Reviewer not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
+    ResponseEntity<?> getAssignedPapers(@ApiIgnore Principal principal) {
+        var reviewerOptional = reviewerRepository.findByUsername(principal.getName());
+
+        if(reviewerOptional.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        var reviewer = reviewerOptional.get();
+
+        var papers = reviewer.getAssignedPapers();
+
+        Set<PaperInfoDto> paperInfoDtoSet = new HashSet<>();
+
+        for(var paper: papers) {
+            paperInfoDtoSet.add(new PaperInfoDto(paper));
+        }
+
+        return ResponseEntity.ok(paperInfoDtoSet);
     }
 }

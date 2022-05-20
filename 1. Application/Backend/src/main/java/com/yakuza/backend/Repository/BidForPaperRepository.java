@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface BidForPaperRepository extends JpaRepository<BidForPaper, Integer> {
     Optional<BidForPaper> findTopByPaperIdOrderByInterestDesc(Integer paper_id);
+    void deleteAllByReviewerIdAndPaperId(Integer reviewer_id, Integer paper_id);
 }
