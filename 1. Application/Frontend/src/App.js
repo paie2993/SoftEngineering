@@ -8,8 +8,15 @@ import { AllConferences } from './chair_GUI/pages/AllConferences/AllConferences'
 import { PaperStatus } from './chair_GUI/pages/PaperStatus/PaperStatus';
 import { useState } from 'react';
 import { ConferenceDetails } from './chair_GUI/pages/ConferenceDetails/ConferenceDetails';
+import { Deadlines } from './chair_GUI/pages/ConferenceDeadlines/Deadlines'
+import { AssignPapers } from './chair_GUI/pages/AssignPapers/AssignPapers';
 
 function App() {
+
+  // It is considered that the user logged in is a Chair
+  localStorage.setItem('userType', 'chair');
+  // that has the id 1
+  localStorage.setItem('userId', 1);
 
   return (
     <>
@@ -21,6 +28,8 @@ function App() {
           <Route path="/conferences" element={ <AllConferences />}/>
           <Route path="/paperstatus" element={ <PaperStatus/>}/>
           <Route path="/conferencedetails" element={ <ConferenceDetails/>}/>
+          <Route path="/deadlines" element={ <Deadlines/>}/>
+          <Route path="/session-assign" element={ <AssignPapers />}/>
         </Routes>
       </BrowserRouter>
     </>

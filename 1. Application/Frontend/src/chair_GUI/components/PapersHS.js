@@ -73,7 +73,7 @@ export const PapersHS = (props) => {
                     Paper Status
                   </button>
                 </Link>
-                <Link to="/" className="noSelect">
+                <Link to="/session-assign" className="noSelect">
                   <button id='btn-assign' className='button' disabled={true}>
                     Assign Accepted Papers
                   </button>

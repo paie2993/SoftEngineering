@@ -1,0 +1,60 @@
+.hero {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 10px 10px 10px 50px;
+  }
+
+.label-deadline {
+    font-family: "Anek Telugu", sans-serif;
+    font-family: "Bebas Neue", cursive;
+    font-size: 60px;
+    color: #66779ce9;  
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.deadlines {
+    font-family: "Anek Telugu", sans-serif;
+    font-family: "Bebas Neue", cursive;
+    display: flex;
+    flex-direction: column;
+}
+
+.deadline {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 12px;   
+    align-items: center;
+}
+
+.dl-text {
+    font-size: 22px;
+    align-items: center;
+    width: 195px;
+    height: 30px;
+    font-weight: 600;
+    color: #413f3d;
+}
+
+.dl-input {
+    margin-left: 10px;
+    background-color: transparent;
+    height: 35px;
+    width: 490px;
+    border: 2px solid #d8d0d0;
+    border-radius: 4px;
+}
+
+.detail-btn {
+    margin-top: 20px;
+    padding: 18px 10px 15px 10px;
+    width: 190px;
+    color: #66779ce9;
+    border: 1px solid #d8d0d0;
+    border-radius: 4px;
+    font-family: "Anek Telugu", sans-serif;
+    font-family: "Bebas Neue", cursive;
+    font-size: 20px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

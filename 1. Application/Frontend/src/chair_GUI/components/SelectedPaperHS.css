@@ -4,3 +4,22 @@
     width: 100%;
     padding: 10px 10px 10px 50px;
   }
+
+.table-sp {
+  height: 300px;
+  width: 650px;
+}
+
+.chair-area {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+.label {
+  font-family: "Anek Telugu", sans-serif;
+  font-family: "Bebas Neue", cursive;
+  font-size: 27px;
+  color: #66779ce9;
+  margin-right: 50px;
+}
