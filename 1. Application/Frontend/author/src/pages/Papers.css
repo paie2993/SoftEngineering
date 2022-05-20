@@ -1,0 +1,13 @@
+.ap-layout {
+  display: flex;
+  flex-direction: row;
+}
+
+.sidebar {
+  height: 100%;
+}
+
+.all_papers {
+  display: flex;
+  width: 100%;
+}

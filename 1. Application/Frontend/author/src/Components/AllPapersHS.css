@@ -1,0 +1,77 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 10px 10px 10px 50px;
+}
+
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-decoration: none;
+  color: #66779ce9;
+}
+
+.title {
+  font-family: "Anek Telugu", sans-serif;
+  font-family: "Bebas Neue", cursive;
+  font-size: 100px;
+  color: #413f3d;
+  width: 100%;
+  border-bottom: 1px solid #413f3d;
+}
+
+.table-section {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.table {
+  height: 480px;
+  width: 810px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.button-area {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 300px;
+  align-items: center;
+}
+
+.button:enabled {
+  margin: 10px 10px 10px 10px;
+  padding: 18px 10px 15px 10px;
+  width: 190px;
+  color: #66779ce9;
+  border: 1px solid #d8d0d0;
+  border-radius: 4px;
+  font-family: "Anek Telugu", sans-serif;
+  font-family: "Bebas Neue", cursive;
+  font-size: 20px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.button:disabled {
+  margin: 10px 10px 10px 10px;
+  padding: 18px 10px 15px 10px;
+  width: 190px;
+  color: #787f8fe9;
+  border: 1px solid #d8d0d0;
+  border-radius: 4px;
+  font-family: "Anek Telugu", sans-serif;
+  font-family: "Bebas Neue", cursive;
+  font-size: 20px;
+}
+
+.button:enabled:hover {
+  cursor: pointer;
+  background-color: #d8d0d0;
+  transition: 0.2s;
+  box-shadow: rgba(100, 100, 111, 0.158) 0px 7px 29px 0px;
+}

@@ -1,12 +1,13 @@
 import "./App.css";
-import { Papers } from "./papers/Papers";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Papers } from "./pages/Papers";
+import { SelectedPaper } from "./pages/SelectedPaper";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Papers></Papers>}></Route>
+      <Route path="/" element={ <SelectedPaper/>}/>
       </Routes>
     </BrowserRouter>
   );
