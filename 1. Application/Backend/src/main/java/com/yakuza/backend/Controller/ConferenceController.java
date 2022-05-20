@@ -1,6 +1,7 @@
 package com.yakuza.backend.Controller;
 
 import com.yakuza.backend.Controller.DTO.*;
+import com.yakuza.backend.Model.BidForPaper;
 import com.yakuza.backend.Model.Conference;
 import com.yakuza.backend.Model.TopicOfInterest;
 import com.yakuza.backend.Model.UserModel.CMSUser;
@@ -32,14 +33,18 @@ public class ConferenceController {
     private final PaperRepository paperRepository;
     private final ConferenceSessionRepository conferenceSessionRepository;
     private final PaperConferenceSubmissionRepository paperConferenceSubmissionRepository;
+    private final BidForPaperRepository bidForPaperRepository;
+    private final ReviewerRepository reviewerRepository;
 
-    public ConferenceController(ConferenceRepository conferenceRepository, UserRepository userRepository, TopicRepository topicRepository, PaperRepository paperRepository, ConferenceSessionRepository conferenceSessionRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository) {
+    public ConferenceController(ConferenceRepository conferenceRepository, UserRepository userRepository, TopicRepository topicRepository, PaperRepository paperRepository, ConferenceSessionRepository conferenceSessionRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, BidForPaperRepository bidForPaperRepository, ReviewerRepository reviewerRepository) {
         this.conferenceRepository = conferenceRepository;
         this.userRepository = userRepository;
         this.topicRepository = topicRepository;
         this.paperRepository = paperRepository;
         this.conferenceSessionRepository = conferenceSessionRepository;
         this.paperConferenceSubmissionRepository = paperConferenceSubmissionRepository;
+        this.bidForPaperRepository = bidForPaperRepository;
+        this.reviewerRepository = reviewerRepository;
     }
 
     @ApiOperation(value = "Get all conferences")
@@ -311,4 +316,52 @@ public class ConferenceController {
         return ResponseEntity.ok("Success");
     }
 
+    @PutMapping("/{id}/papers/assign")
+    @ApiOperation("Assigns accepted papers to reviewers")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Conference not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
+    public ResponseEntity<?> assignPapers(@ApiIgnore Principal principal, @PathVariable Integer id) {
+        Optional<Conference> conferenceOptional = conferenceRepository.findById(id);
+        CMSUser user = userRepository.findByUsername(principal.getName());
+
+        // if the conference wasn't found, return 404
+        if(conferenceOptional.isEmpty()) {
+            return new ResponseEntity<>("Conference not found", HttpStatus.NOT_FOUND);
+        }
+
+        // if the user isn't the chair of the conference, return unauthorized
+        Conference conference = conferenceOptional.get();
+
+        if(!Objects.equals(conference.getChair().getId(), user.getId())) {
+            return new ResponseEntity<>("You are not the chair of this conference", HttpStatus.UNAUTHORIZED);
+        }
+
+        var paper_submissions = conference.getSubmissions();
+
+        // go over all the submissions, and assign the accepted papers to the highest bidding reviewer
+
+        for(var sub: paper_submissions) {
+            if(Objects.equals(sub.getStatus(), "accepted")) {
+                var paper = sub.getPaper();
+
+                // get the highest bidder for the paper
+                Optional<BidForPaper> bid_opt = bidForPaperRepository.findTopByPaperIdOrderByInterestDesc(paper.getId());
+
+                if(bid_opt.isPresent()) {
+                    var bid = bid_opt.get();
+                    var reviewer = bid.getReviewer();
+                    var paperSet = reviewer.getAssignedPapers();
+
+                    paperSet.add(bid.getPaper());
+                    reviewer.setAssignedPapers(paperSet);
+                    reviewerRepository.save(reviewer);
+                }
+            }
+        }
+
+        return ResponseEntity.ok("Success");
+    }
 }
