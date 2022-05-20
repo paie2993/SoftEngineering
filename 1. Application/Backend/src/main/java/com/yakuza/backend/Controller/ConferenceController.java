@@ -291,6 +291,15 @@ public class ConferenceController {
 
         var sub = subOpt.get();
 
+
+        // if the paper was already added to a conference session, the decision cannot be modified
+        if(Objects.equals(sub.getStatus(), "accepted")) {
+            if(sub.getConference() != null) {
+                return new ResponseEntity<>("Paper already assigned to conference session, you may not change the " +
+                        "decision", HttpStatus.BAD_REQUEST);
+            }
+        }
+
         if(Objects.equals(status.getContent(), "accepted")) {
             sub.setStatus("accepted");
         } else if(Objects.equals(status.getContent(), "rejected")) {

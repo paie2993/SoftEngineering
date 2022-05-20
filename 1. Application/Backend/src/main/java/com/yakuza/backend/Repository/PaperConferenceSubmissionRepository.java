@@ -9,5 +9,5 @@ import java.util.Set;
 
 @Repository
 public interface PaperConferenceSubmissionRepository extends JpaRepository<PaperConferenceSubmission, Integer> {
-    public Optional<PaperConferenceSubmission> findPaperConferenceSubmissionByConferenceIdAndPaperId(Integer conferenceId, Integer paperId);
+    Optional<PaperConferenceSubmission> findPaperConferenceSubmissionByConferenceIdAndPaperId(Integer conferenceId, Integer paperId);
 }

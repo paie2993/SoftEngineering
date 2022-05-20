@@ -1,12 +1,10 @@
 package com.yakuza.backend.Controller;
 
 import com.yakuza.backend.Controller.DTO.AddPaperDto;
+import com.yakuza.backend.Controller.DTO.BidDto;
 import com.yakuza.backend.Controller.DTO.PaperInfoDto;
 import com.yakuza.backend.Controller.DTO.SubmitToConferenceDto;
-import com.yakuza.backend.Model.Keyword;
-import com.yakuza.backend.Model.Paper;
-import com.yakuza.backend.Model.PaperConferenceSubmission;
-import com.yakuza.backend.Model.TopicOfInterest;
+import com.yakuza.backend.Model.*;
 import com.yakuza.backend.Model.UserModel.Author;
 import com.yakuza.backend.Repository.*;
 import io.swagger.annotations.ApiOperation;
@@ -29,22 +27,24 @@ import java.util.Set;
 @RequestMapping("/paper")
 public class PaperController {
     private final PaperRepository paperRepository;
-    private final UserRepository userRepository;
     private final TopicRepository topicRepository;
     private final ConferenceRepository conferenceRepository;
     private final AuthorRepository authorRepository;
     private final KeywordRepository keywordRepository;
     private final PaperConferenceSubmissionRepository paperConferenceSubmissionRepository;
+    private final ReviewerRepository reviewerRepository;
+    private final BidForPaperRepository bidForPaperRepository;
 
 
-    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository) {
+    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, ReviewerRepository reviewerRepository, BidForPaperRepository bidForPaperRepository) {
         this.paperRepository = paperRepository;
-        this.userRepository = userRepository;
         this.topicRepository = topicRepository;
         this.conferenceRepository = conferenceRepository;
         this.authorRepository = authorRepository;
         this.keywordRepository = keywordRepository;
         this.paperConferenceSubmissionRepository = paperConferenceSubmissionRepository;
+        this.reviewerRepository = reviewerRepository;
+        this.bidForPaperRepository = bidForPaperRepository;
     }
 
     @GetMapping("/")
@@ -178,6 +178,40 @@ public class PaperController {
         paperConferenceSubmission.setStatus("pending");
 
         paperConferenceSubmissionRepository.save(paperConferenceSubmission);
+
+        return ResponseEntity.ok("Success");
+    }
+
+    @ApiOperation(value = "Add a bid to a paper (reviewer only)")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @PostMapping("/{id}/bids")
+    public ResponseEntity<?> bidForPaper(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestBody BidDto bidDto) {
+        var reviewerOpt = reviewerRepository.findByUsername(principal.getName());
+        var paperOpt = paperRepository.findById(id);
+
+        if(paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+        if(reviewerOpt.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        var bid_val = bidDto.getBidValue();
+        // a bid may only have an interest from 1 to 10
+        if(bid_val > 10 || bid_val <= 0) {
+            return new ResponseEntity<>("Invalid bid value, must be between 1 and 10", HttpStatus.BAD_REQUEST);
+        }
+
+        BidForPaper new_bid = new BidForPaper();
+
+        new_bid.setInterest(bid_val);
+        new_bid.setReviewer(reviewerOpt.get());
+        new_bid.setPaper(paperOpt.get());
+
+        bidForPaperRepository.save(new_bid);
 
         return ResponseEntity.ok("Success");
     }

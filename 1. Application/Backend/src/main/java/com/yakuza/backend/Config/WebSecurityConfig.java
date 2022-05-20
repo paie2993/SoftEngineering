@@ -43,21 +43,34 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
+                // anyone may attempt to log in
                 .antMatchers("/user/login").permitAll()
+                // anyone may register
                 .antMatchers("/user/register").permitAll()
+                // anyone may view the api documentation
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",
                         "/configuration/security",
                         "/swagger-ui.html",
                         "/webjars/**").permitAll()
+                // only chairs may modify the details of a conference
                 .antMatchers(HttpMethod.PUT ,"/conference/{id}").hasAuthority("CHAIR")
+                // only chairs may get the list of papers submitted to a conference
                 .antMatchers(HttpMethod.GET, "/conference/{id}/papers").hasAuthority("CHAIR")
+                // only reviewers may get the list of all papers
                 .antMatchers(HttpMethod.GET, "/paper/").hasAuthority("REVIEWER")
+                // only authors may add papers
                 .antMatchers(HttpMethod.POST, "/paper/").hasAuthority("AUTHOR")
-                .antMatchers(HttpMethod.PUT, "/{id}/papers/{paperId}/decideOnPaper").hasAuthority("CHAIR")
-                .antMatchers(HttpMethod.PUT, "{id}/sessions/{session_id}/papers").hasAuthority("CHAIR")
-                .antMatchers(HttpMethod.PUT, "/{id}/submissions").hasAuthority("AUTHOR")
+                // only chairs may decide on papers
+                .antMatchers(HttpMethod.PUT, "/conference/{id}/papers/{paperId}/decideOnPaper").hasAuthority("CHAIR")
+                // only chairs may assign a paper to a session
+                .antMatchers(HttpMethod.PUT, "/conference/{id}/sessions/{session_id}/papers").hasAuthority("CHAIR")
+                // only authors may submit a paper to a conference
+                .antMatchers(HttpMethod.PUT, "/conference/{id}/submissions").hasAuthority("AUTHOR")
+                // only reviewers may bid on a paper
+                .antMatchers(HttpMethod.PUT, "/paper/{id}/bids").hasAuthority("REVIEWER")
+                // only reviewers may do reviewer stuff
                 .antMatchers("/reviewer/**").hasAuthority("REVIEWER")
                 .anyRequest().authenticated()
                 .and()
