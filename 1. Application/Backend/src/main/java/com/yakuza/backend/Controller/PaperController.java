@@ -3,6 +3,7 @@ package com.yakuza.backend.Controller;
 import com.yakuza.backend.Controller.DTO.*;
 import com.yakuza.backend.Model.*;
 import com.yakuza.backend.Model.UserModel.Author;
+import com.yakuza.backend.Model.UserModel.Reviewer;
 import com.yakuza.backend.Repository.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,9 +35,11 @@ public class PaperController {
     private final ReviewerRepository reviewerRepository;
     private final BidForPaperRepository bidForPaperRepository;
     private final ConflictOfInterestRepository conflictOfInterestRepository;
+    private final PaperEvaluationRepository paperEvaluationRepository;
+    private final PaperCommentRepository paperCommentRepository;
 
 
-    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, ReviewerRepository reviewerRepository, BidForPaperRepository bidForPaperRepository, ConflictOfInterestRepository conflictOfInterestRepository) {
+    public PaperController(PaperRepository paperRepository, UserRepository userRepository, TopicRepository topicRepository, ConferenceRepository conferenceRepository, AuthorRepository authorRepository, KeywordRepository keywordRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, ReviewerRepository reviewerRepository, BidForPaperRepository bidForPaperRepository, ConflictOfInterestRepository conflictOfInterestRepository, PaperEvaluationRepository paperEvaluationRepository, PaperCommentRepository paperCommentRepository) {
         this.paperRepository = paperRepository;
         this.topicRepository = topicRepository;
         this.conferenceRepository = conferenceRepository;
@@ -46,6 +49,8 @@ public class PaperController {
         this.reviewerRepository = reviewerRepository;
         this.bidForPaperRepository = bidForPaperRepository;
         this.conflictOfInterestRepository = conflictOfInterestRepository;
+        this.paperEvaluationRepository = paperEvaluationRepository;
+        this.paperCommentRepository = paperCommentRepository;
     }
 
     @GetMapping("/")
@@ -271,4 +276,71 @@ public class PaperController {
         return ResponseEntity.ok("Success");
     }
 
+    @ApiOperation(value = "Evaluate a paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @Transactional
+    @PostMapping("/{id}/evaluations")
+    public ResponseEntity<?> addEvaluation(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestBody AddEvaluationDTO dto) {
+        var reviewerOpt = reviewerRepository.findByUsername(principal.getName());
+        var paperOpt = paperRepository.findById(id);
+
+        if(paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+        if(reviewerOpt.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        if(dto.getDecision() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        var reviewer = reviewerOpt.get();
+        var paper = paperOpt.get();
+
+        var evaluation = new ReviewerEvaluation();
+        evaluation.setJudgement(dto.getDecision());
+        evaluation.setPaper(paper);
+        evaluation.setReviewer(reviewer);
+        paperEvaluationRepository.save(evaluation);
+
+        return ResponseEntity.ok("Success");
+    }
+
+    @ApiOperation(value = "Add a special comment to a paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @Transactional
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<?> addSpecialComment(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestBody AddCommentDto dto) {
+        var reviewerOpt = reviewerRepository.findByUsername(principal.getName());
+
+        if(reviewerOpt.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        Reviewer reviewer = reviewerOpt.get();
+
+        var evalOpt = paperEvaluationRepository.findByReviewerIdAndPaperId(reviewer.getId(), id);
+
+        if(evalOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found in your reviewed papers", HttpStatus.NOT_FOUND);
+        }
+
+        var eval = evalOpt.get();
+        var paper = eval.getPaper();
+
+        var comment = new PaperComment();
+        comment.setContent(dto.getComment());
+        comment.setReviewer(reviewer);
+        comment.setPaper(paper);
+        paperCommentRepository.save(comment);
+
+        return ResponseEntity.ok("Success");
+    }
 }

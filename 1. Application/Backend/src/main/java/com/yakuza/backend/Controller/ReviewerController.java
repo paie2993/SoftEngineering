@@ -1,11 +1,13 @@
 package com.yakuza.backend.Controller;
 
+import com.yakuza.backend.Controller.DTO.PaperEvaluationDto;
 import com.yakuza.backend.Controller.DTO.PaperInfoDto;
 import com.yakuza.backend.Controller.DTO.ReviewerTopicOfInterestDto;
 import com.yakuza.backend.Controller.DTO.TopicOfInterestDto;
 import com.yakuza.backend.Model.TopicOfInterest;
 import com.yakuza.backend.Repository.ReviewerRepository;
 import com.yakuza.backend.Repository.TopicRepository;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -123,5 +125,32 @@ public class ReviewerController {
         }
 
         return ResponseEntity.ok(paperInfoDtoSet);
+    }
+
+    @GetMapping("/papers/evaluations")
+    @ApiOperation("Get the reviewed papers")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Reviewer not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
+    ResponseEntity<?> getReviewedPapers(@ApiIgnore Principal principal) {
+        var reviewerOptional = reviewerRepository.findByUsername(principal.getName());
+
+        if(reviewerOptional.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        var reviewer = reviewerOptional.get();
+
+        var papers = reviewer.getReviewerEvaluations();
+
+        Set<PaperEvaluationDto> paperEvaluationDtos = new HashSet<>();
+
+        for(var eval: papers) {
+            paperEvaluationDtos.add(new PaperEvaluationDto(eval.getJudgement(), new PaperInfoDto(eval.getPaper())));
+        }
+
+        return ResponseEntity.ok(paperEvaluationDtos);
     }
 }
