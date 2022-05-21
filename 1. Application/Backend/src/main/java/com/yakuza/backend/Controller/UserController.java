@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @Validated
 @RequestMapping("/user")
 public class UserController {

@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @Validated
 @RequestMapping("/conference")
 public class ConferenceController {

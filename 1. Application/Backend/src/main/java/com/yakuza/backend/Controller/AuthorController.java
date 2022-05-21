@@ -19,7 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @Validated
 @RequestMapping("/author")
 public class AuthorController {

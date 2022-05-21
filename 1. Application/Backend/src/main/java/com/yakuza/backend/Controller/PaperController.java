@@ -22,7 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @Validated
 @RequestMapping("/paper")
 public class PaperController {
@@ -60,6 +60,21 @@ public class PaperController {
 
         for(var paper: papers) {
             paperInfoDtoSet.add(new PaperInfoDto(paper));
+        }
+
+        return ResponseEntity.ok(paperInfoDtoSet);
+    }
+
+
+    @GetMapping("/unassigned")
+    public ResponseEntity<?> getUnassignedPapers() {
+        var papers = paperRepository.findAll();
+        Set<PaperInfoDto> paperInfoDtoSet = new HashSet<>();
+
+        for(var paper: papers) {
+            if(paper.getReviewers().isEmpty()) {
+                paperInfoDtoSet.add(new PaperInfoDto(paper));
+            }
         }
 
         return ResponseEntity.ok(paperInfoDtoSet);
