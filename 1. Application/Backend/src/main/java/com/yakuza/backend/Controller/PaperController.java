@@ -65,6 +65,22 @@ public class PaperController {
         return ResponseEntity.ok(paperInfoDtoSet);
     }
 
+    @ApiOperation(value = "Get a specific paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPaper(@PathVariable Integer id) {
+        var paperOpt = paperRepository.findById(id);
+
+        if(paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(new PaperInfoDto(paperOpt.get()));
+    }
+
 
     @GetMapping("/unassigned")
     public ResponseEntity<?> getUnassignedPapers() {

@@ -59,6 +59,34 @@ public class ReviewerController {
         return ResponseEntity.ok(topicOfInterestSet);
     }
 
+    @GetMapping("/nottopics")
+    @ApiOperation("Get the topics of interest that a reviewer doesn't have")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Reviewer not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
+    public ResponseEntity<?> getTopicsOfDisinterest(@ApiIgnore Principal principal) {
+        var reviewerOptional = reviewerRepository.findByUsername(principal.getName());
+
+        if(reviewerOptional.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        var reviewer = reviewerOptional.get();
+
+        var allTopics = topicRepository.findAll();
+        var dtoSet = new HashSet<TopicOfInterestDto>();
+
+        for(var topic: allTopics) {
+            if(!topic.getReviewers().contains(reviewer)) {
+                dtoSet.add(new TopicOfInterestDto(topic));
+            }
+        }
+
+        return ResponseEntity.ok(dtoSet);
+    }
+
     @PutMapping("/topics")
     @ApiOperation("Modify the topics of interest")
     @ApiResponses({
