@@ -9,6 +9,7 @@ export const SelectedPaper = () => {
         <React.Fragment>
             <div class="ap-layout">
                 <Sidebar></Sidebar>
+                <SelectedPaperHS></SelectedPaperHS>
             </div>
         </React.Fragment>
     )
