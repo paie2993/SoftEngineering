@@ -8,14 +8,19 @@ import com.yakuza.backend.Repository.*;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.tika.Tika;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.sound.midi.SysexMessage;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.Optional;
@@ -65,7 +70,144 @@ public class PaperController {
         return ResponseEntity.ok(paperInfoDtoSet);
     }
 
-    @ApiOperation(value = "Get a specific paper")
+    @PutMapping("/{id}/fullCopy")
+    @ApiOperation(value = "Upload the full copy of a paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    public ResponseEntity<?> uploadFullCopy(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestParam("file") MultipartFile file) {
+        var paperOpt = paperRepository.findById(id);
+        var authorOpt = authorRepository.findByUsername(principal.getName());
+
+        if(paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+        if(authorOpt.isEmpty()) {
+            return new ResponseEntity<>("Author not found", HttpStatus.NOT_FOUND);
+        }
+
+        var paper = paperOpt.get();
+        var author = authorOpt.get();
+
+        // if the author isn't an author of the paper, return forbidden
+
+        if(!paper.getAuthors().contains(author)) {
+            return new ResponseEntity<>("You're not an author of the paper", HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            String fname = file.getOriginalFilename();
+            String detectedType = fname.substring(fname.lastIndexOf('.') + 1);
+
+            if(!detectedType.equals("docx") && !detectedType.equals("pdf")) {
+                return new ResponseEntity<>("Unsupported file format", HttpStatus.BAD_REQUEST);
+            }
+
+            paper.setFullCopy(file.getBytes());
+            paper.setFullCopyUrl(file.getOriginalFilename());
+            paperRepository.save(paper);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Couldn't upload file", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        return ResponseEntity.ok("Success");
+    }
+
+    @PutMapping("/{id}/photo")
+    @ApiOperation(value = "Upload the the camera photo of a paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    public ResponseEntity<?> uploadCameraPhoto(@ApiIgnore Principal principal, @PathVariable Integer id, @RequestParam("file") MultipartFile file) {
+        var paperOpt = paperRepository.findById(id);
+        var authorOpt = authorRepository.findByUsername(principal.getName());
+
+        if(paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+        if(authorOpt.isEmpty()) {
+            return new ResponseEntity<>("Author not found", HttpStatus.NOT_FOUND);
+        }
+
+        var paper = paperOpt.get();
+        var author = authorOpt.get();
+
+        // if the author isn't an author of the paper, return forbidden
+
+        if(!paper.getAuthors().contains(author)) {
+            return new ResponseEntity<>("You're not an author of the paper", HttpStatus.FORBIDDEN);
+        }
+
+        try {
+            String fname = file.getOriginalFilename();
+            String detectedType = fname.substring(fname.lastIndexOf('.') + 1);
+
+            if(!detectedType.equals("jpeg") && !detectedType.equals("png") && !detectedType.equals("gif")) {
+                return new ResponseEntity<>("Unsupported file format", HttpStatus.BAD_REQUEST);
+            }
+
+            paper.setCameraCopy(file.getBytes());
+            paper.setCameraCopyUrl(file.getOriginalFilename());
+            paperRepository.save(paper);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Couldn't upload file", HttpStatus.EXPECTATION_FAILED);
+        }
+
+        return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping("/{id}/fullCopy")
+    @ApiOperation(value = "Get the full copy of a paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    public ResponseEntity<?> downloadFullCopy(@PathVariable Integer id) {
+        var paperOpt = paperRepository.findById(id);
+
+        if (paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+
+        var paper = paperOpt.get();
+
+        if(paper.getFullCopy() == null) {
+            return new ResponseEntity<>("Full copy not found", HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + paper.getFullCopyUrl() + "\"")
+                .body(paper.getFullCopy());
+    }
+
+    @GetMapping("/{id}/photo")
+    @ApiOperation(value = "Get the camera photo of a paper")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Resource not found")
+    })
+    public ResponseEntity<?> downloadCameraPhoto(@PathVariable Integer id) {
+        var paperOpt = paperRepository.findById(id);
+
+        if (paperOpt.isEmpty()) {
+            return new ResponseEntity<>("Paper not found", HttpStatus.NOT_FOUND);
+        }
+
+        var paper = paperOpt.get();
+
+        if(paper.getFullCopy() == null) {
+            return new ResponseEntity<>("Camera photo not found", HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + paper.getCameraCopyUrl() + "\"")
+                .body(paper.getCameraCopy());
+    }
+
+
+        @ApiOperation(value = "Get a specific paper")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 404, message = "Resource not found")
@@ -102,10 +244,12 @@ public class PaperController {
             @ApiResponse(code = 404, message = "Resource not found")
     })
     @PostMapping("/")
+    @Transactional
     public ResponseEntity<?> addPaper(@ApiIgnore Principal principal, @RequestBody @Valid AddPaperDto request) {
         var author = authorRepository.getByUsername(principal.getName());
 
         Paper paper = new Paper();
+
         paper.setPaperAbstract(request.getPaperAbstract());
         paper.setTitle(request.getTitle());
 

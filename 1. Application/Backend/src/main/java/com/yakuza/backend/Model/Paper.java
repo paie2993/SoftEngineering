@@ -57,6 +57,10 @@ public class Paper implements Serializable {
     private Set<ChairEvaluation> chairEvaluations;
     @OneToMany(mappedBy = "paper")
     private Set<ReviewerEvaluation> reviewerEvaluations;
+    @Lob
+    private byte[] fullCopy;
+    @Lob
+    private byte[] cameraCopy;
 
     public Set<PaperConferenceSubmission> getSubmissions() {
         return submissions;
@@ -65,6 +69,16 @@ public class Paper implements Serializable {
     public void setSubmissions(Set<PaperConferenceSubmission> submissions) {
         this.submissions = submissions;
     }
+
+    public byte[] getFullCopy() {
+        return fullCopy;
+    }
+
+    public void setFullCopy(byte[] fullCopy) {
+        this.fullCopy = fullCopy;
+    }
+
+
 
     public Set<TopicOfInterest> getTopicsOfInterest() {
         return topicsOfInterest;
@@ -184,5 +198,13 @@ public class Paper implements Serializable {
 
     public void setReviewerEvaluations(Set<ReviewerEvaluation> reviewerEvaluations) {
         this.reviewerEvaluations = reviewerEvaluations;
+    }
+
+    public byte[] getCameraCopy() {
+        return cameraCopy;
+    }
+
+    public void setCameraCopy(byte[] cameraCopy) {
+        this.cameraCopy = cameraCopy;
     }
 }

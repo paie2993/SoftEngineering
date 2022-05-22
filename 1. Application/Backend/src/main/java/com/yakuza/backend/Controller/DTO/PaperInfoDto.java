@@ -14,7 +14,8 @@ public class PaperInfoDto implements Serializable {
     private Set<String> keywords;
     private Set<AuthorDto> authors;
     private Set<SubmissionStatusDto> submissions;
-
+    private boolean hasFullCopy;
+    private boolean hasPhoto;
     private Set<CommentDto> comments;
 
     public PaperInfoDto(Paper paper) {
@@ -27,6 +28,10 @@ public class PaperInfoDto implements Serializable {
         this.authors = new HashSet<>();
         this.submissions = new HashSet<>();
         this.comments = new HashSet<>();
+
+        this.hasFullCopy = paper.getFullCopy() != null;
+
+        this.hasPhoto = paper.getCameraCopyUrl() != null;
 
         for(var topic: paper.getTopicsOfInterest()) {
             this.topics.add(topic.getDescription());
@@ -46,6 +51,22 @@ public class PaperInfoDto implements Serializable {
             cdto.setReviewer_name(comment.getReviewer().getUsername());
             this.comments.add(cdto);
         }
+    }
+
+    public boolean isHasFullCopy() {
+        return hasFullCopy;
+    }
+
+    public void setHasFullCopy(boolean hasFullCopy) {
+        this.hasFullCopy = hasFullCopy;
+    }
+
+    public boolean isHasPhoto() {
+        return hasPhoto;
+    }
+
+    public void setHasPhoto(boolean hasPhoto) {
+        this.hasPhoto = hasPhoto;
     }
 
     public Set<SubmissionStatusDto> getSubmissions() {

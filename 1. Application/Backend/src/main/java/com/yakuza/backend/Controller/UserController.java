@@ -1,10 +1,7 @@
 package com.yakuza.backend.Controller;
 
 
-import com.yakuza.backend.Controller.DTO.LoginRequestDto;
-import com.yakuza.backend.Controller.DTO.LoginResponseDto;
-import com.yakuza.backend.Controller.DTO.RegisterRequestDto;
-import com.yakuza.backend.Controller.DTO.UpdateUserRequestDto;
+import com.yakuza.backend.Controller.DTO.*;
 import com.yakuza.backend.JWTUtils.JWTUserDetailsService;
 import com.yakuza.backend.JWTUtils.TokenManager;
 import com.yakuza.backend.Model.UserModel.*;
@@ -24,6 +21,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
@@ -145,24 +143,11 @@ public class UserController {
 
     @GetMapping("/")
     @ResponseBody
-    public ResponseEntity<?> getUserDetails(@ApiIgnore Principal principal, @RequestParam Integer id) {
-        Optional<?> user_opt = userRepository.findById(id);
-
-        // check that the user with the provided id indeed exists
-        if(user_opt.isEmpty()) {
-            return new ResponseEntity<>("User not found", HttpStatus.BAD_REQUEST);
-        }
-
-        // get the user if it exists
-        CMSUser user = (CMSUser) user_opt.get();
-
-        // if the requesting user doesn't correspond with the user whose information is requested, respond with error
-        if(!user.getUsername().equals(principal.getName())) {
-            return new ResponseEntity<>("Unauthorized", HttpStatus.UNAUTHORIZED);
-        }
+    public ResponseEntity<?> getUserDetails(@ApiIgnore Principal principal) {
+        var user = userRepository.findByUsername(principal.getName());
 
         // return the user details
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(new UserInfoDto(user));
     }
 
     @PutMapping("/")
@@ -172,7 +157,7 @@ public class UserController {
 
         // if they provided a username, update it
         if(request.getUsername() != null) {
-            if(userRepository.existsByUsername(request.getUsername())) {
+            if(userRepository.existsByUsername(request.getUsername()) && !(Objects.equals(request.getUsername(), principal.getName()))) {
                 return new ResponseEntity<>("Username already exists", HttpStatus.BAD_REQUEST);
             }
 
@@ -182,7 +167,7 @@ public class UserController {
 
         // if they provided an email, update it
         if(request.getEmail() != null) {
-            if(userRepository.existsByEmail(request.getEmail())) {
+            if(userRepository.existsByEmail(request.getEmail()) && !(Objects.equals(user.getEmail(), request.getEmail()))) {
                 return new ResponseEntity<>("Email already exists", HttpStatus.BAD_REQUEST);
             }
 
@@ -251,6 +236,6 @@ public class UserController {
         }
 
         CMSUser user_result = (CMSUser) user_opt.get();
-        return ResponseEntity.ok(user_result);
+        return ResponseEntity.ok(new UserInfoDto(user_result));
     }
 }

@@ -35,8 +35,10 @@ public class ConferenceController {
     private final PaperConferenceSubmissionRepository paperConferenceSubmissionRepository;
     private final BidForPaperRepository bidForPaperRepository;
     private final ReviewerRepository reviewerRepository;
+    private final PaperEvaluationRepository paperEvaluationRepository;
+    private final ConflictOfInterestRepository conflictOfInterestRepository;
 
-    public ConferenceController(ConferenceRepository conferenceRepository, UserRepository userRepository, TopicRepository topicRepository, PaperRepository paperRepository, ConferenceSessionRepository conferenceSessionRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, BidForPaperRepository bidForPaperRepository, ReviewerRepository reviewerRepository) {
+    public ConferenceController(ConferenceRepository conferenceRepository, UserRepository userRepository, TopicRepository topicRepository, PaperRepository paperRepository, ConferenceSessionRepository conferenceSessionRepository, PaperConferenceSubmissionRepository paperConferenceSubmissionRepository, BidForPaperRepository bidForPaperRepository, ReviewerRepository reviewerRepository, PaperEvaluationRepository paperEvaluationRepository, ConflictOfInterestRepository conflictOfInterestRepository) {
         this.conferenceRepository = conferenceRepository;
         this.userRepository = userRepository;
         this.topicRepository = topicRepository;
@@ -45,6 +47,8 @@ public class ConferenceController {
         this.paperConferenceSubmissionRepository = paperConferenceSubmissionRepository;
         this.bidForPaperRepository = bidForPaperRepository;
         this.reviewerRepository = reviewerRepository;
+        this.paperEvaluationRepository = paperEvaluationRepository;
+        this.conflictOfInterestRepository = conflictOfInterestRepository;
     }
 
     @ApiOperation(value = "Get all conferences")
@@ -355,9 +359,12 @@ public class ConferenceController {
                     var reviewer = bid.getReviewer();
                     var paperSet = reviewer.getAssignedPapers();
 
-                    paperSet.add(bid.getPaper());
-                    reviewer.setAssignedPapers(paperSet);
-                    reviewerRepository.save(reviewer);
+                    // if the reviewer isn't already assigned this paper and if they haven't yet reviewed it and there's no conflict
+                    if(!paperSet.contains(paper) && !paperEvaluationRepository.existsByReviewerIdAndPaperId(reviewer.getId(), paper.getId()) && !conflictOfInterestRepository.existsByReviewerIdAndPaperId(reviewer.getId(), paper.getId())) {
+                        paperSet.add(bid.getPaper());
+                        reviewer.setAssignedPapers(paperSet);
+                        reviewerRepository.save(reviewer);
+                    }
                 }
             }
         }

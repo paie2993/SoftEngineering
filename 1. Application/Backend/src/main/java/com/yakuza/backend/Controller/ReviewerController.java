@@ -1,9 +1,6 @@
 package com.yakuza.backend.Controller;
 
-import com.yakuza.backend.Controller.DTO.PaperEvaluationDto;
-import com.yakuza.backend.Controller.DTO.PaperInfoDto;
-import com.yakuza.backend.Controller.DTO.ReviewerTopicOfInterestDto;
-import com.yakuza.backend.Controller.DTO.TopicOfInterestDto;
+import com.yakuza.backend.Controller.DTO.*;
 import com.yakuza.backend.Model.TopicOfInterest;
 import com.yakuza.backend.Repository.ReviewerRepository;
 import com.yakuza.backend.Repository.TopicRepository;
@@ -153,6 +150,66 @@ public class ReviewerController {
         }
 
         return ResponseEntity.ok(paperInfoDtoSet);
+    }
+
+    @GetMapping("/papers/toreview")
+    @ApiOperation("Get the papers assigned to review but that have not yet been reviewed")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Reviewer not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
+    ResponseEntity<?> getToReview(@ApiIgnore Principal principal) {
+        var reviewerOptional = reviewerRepository.findByUsername(principal.getName());
+
+        if(reviewerOptional.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        var reviewer = reviewerOptional.get();
+
+        var papers = reviewer.getAssignedPapers();
+
+        Set<PaperInfoDto> paperInfoDtoSet = new HashSet<>();
+
+        for(var paper: papers) {
+            if(paper.getReviewerEvaluations().isEmpty()) {
+                paperInfoDtoSet.add(new PaperInfoDto(paper));
+            }
+        }
+
+        return ResponseEntity.ok(paperInfoDtoSet);
+    }
+
+    @GetMapping("/bids")
+    @ApiOperation("Get all the bids of a reviewer")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Reviewer not found"),
+            @ApiResponse(code = 503, message = "Unauthorized")
+    })
+    ResponseEntity<?> getBids(@ApiIgnore Principal principal) {
+        var reviewerOptional = reviewerRepository.findByUsername(principal.getName());
+
+        if(reviewerOptional.isEmpty()) {
+            return new ResponseEntity<>("Reviewer not found", HttpStatus.NOT_FOUND);
+        }
+
+        var reviewer = reviewerOptional.get();
+
+        var bids = reviewer.getBidsForPaper();
+
+        Set<ReviewerBidDto> bidSet = new HashSet<>();
+
+        for(var bid: bids) {
+            var bidDto = new ReviewerBidDto();
+            bidDto.setBidValue(bid.getInterest());
+            bidDto.setReviewerId(reviewer.getId());
+            bidDto.setPaperId(bid.getPaper().getId());
+            bidSet.add(bidDto);
+        }
+
+        return ResponseEntity.ok(bidSet);
     }
 
     @GetMapping("/papers/evaluations")
