@@ -149,3 +149,25 @@ input {
     height: 200px;
     width: 100%;
 }
+
+.edit-icon.org {
+    color: #66779ce9;
+    border: 1px solid #66779ce9;
+    border-radius: 4px;
+    padding: 2px;
+    margin: 5px;
+}
+
+.edit-icon.conf {
+    color: #66779ce9;
+    border: 1px solid #66779ce9;
+    border-radius: 4px;
+    padding: 6px;
+    margin: 5px;
+}
+
+.edit-icon:hover {
+    cursor: pointer;
+    box-shadow: rgba(100, 100, 111, 0.158) 0px 7px 29px 0px;
+    transition: 2s;
+}

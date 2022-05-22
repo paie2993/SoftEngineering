@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useFetch } from '../../useFetch';
 import './SelectedPaperHS.css'
 import { HeaderText } from './HeaderText'
 import { Table } from './Table'
@@ -39,7 +40,21 @@ export const VerdictSelect = () => {
     </div>
   );
 }
-export default function ComboBox() {
+
+  
+export const ComboBox = (props) => {
+
+  const apiURL = "https://mocki.io/v1/6fde9b8c-b9eb-47f6-9c17-c7566225521f";
+  const conferences = useFetch(apiURL);
+  const [conferencesForPaper, setConferencesForPaper] = props.conferenceState;
+
+  useEffect(() => {
+    const labels = []
+    conferences.map((conf) => labels.push({label:conf.name}));
+    setConferencesForPaper(labels);
+    console.log(conferencesForPaper);
+  }, [conferences]);
+
   return (
     <Autocomplete
       disablePortal
@@ -50,13 +65,6 @@ export default function ComboBox() {
     />
   );
 }
-
-const conferencesForPaper = [
-{label: "Conference1"},
-{label: "Conference2"},
-{label: "Conference3"},
-{label: "Conference4"}
-]
 
 const columns = [
   { field: 'idReviewer', headerName: 'ID', width: 70 },
@@ -69,19 +77,22 @@ export const SelectedPaperHS = () => {
 
     const paper = JSON.parse(localStorage.getItem("selectedPaper"));
     const [selectedReviewer, setSelectedReviewer] = useState(null);
-    const [age, setAge] = React.useState('');
+    const [conferencesForPaper, setConferencesForPaper] = useState(null);
 
-    const handleChange = (event) => {
-      setAge(event.target.value);
-      console.log(age)
-    };
-
+    // useEffect(() => {
+    //   if (conferencesForPaper !== null) {
+    //     document.getElementById('verdict-chair').visibility('visible');
+    //   }
+    //   else {
+    //     document.getElementById('verdict-chair').visibility('hidden');
+    //   }
+    // }, [conferencesForPaper])
 
     return (
         <>
         <div className="hero">
             <HeaderText text={paper.title} />
-            <ComboBox />
+            <ComboBox conferenceState={[conferencesForPaper, setConferencesForPaper]}/>
             <h2 className='label'>Reviewers' evaluation</h2>
             <div className="table-sp">
                     <Table 
@@ -91,7 +102,7 @@ export const SelectedPaperHS = () => {
                     selected={[selectedReviewer, setSelectedReviewer]}
                     />
             </div>
-            <div className='chair-area'>
+            <div className='chair-area' id='verdict-chair'>
               <h2 className='label'>My evaluation</h2>
               <VerdictSelect></VerdictSelect>
               <button className='button'>

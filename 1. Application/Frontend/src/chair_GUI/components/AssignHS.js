@@ -22,6 +22,7 @@ export const AssignHS = () => {
     const [myConferences, setMyConferences] = useState([]);
     const [sessionsShown, setSessionsShown] = useState([]);
     const [selectedSession, setSelectedSession] = useState(null);
+    const papersToSessions = [];
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -66,6 +67,10 @@ export const AssignHS = () => {
         }
     }, [selectedConference, selectedSession])
 
+    function assignPaper() {
+        console.log('Assigned paper!')
+    }
+
     return (
         <div className="hero">
             <div className='header-text'>
@@ -92,7 +97,7 @@ export const AssignHS = () => {
                 </div>   
             </div>
             <div className='assign-btn'>   
-                <button className='btn-assign-paper' id='assign' disabled={true} >
+                <button className='btn-assign-paper' id='assign' disabled={true} onClick={assignPaper}>
                     Assign Paper
                 </button>
             </div>

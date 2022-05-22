@@ -16,7 +16,7 @@ function App() {
   // It is considered that the user logged in is a Chair
   localStorage.setItem('userType', 'chair');
   // that has the id 1
-  localStorage.setItem('userId', 1);
+  localStorage.setItem('userId', 2);
 
   return (
     <>

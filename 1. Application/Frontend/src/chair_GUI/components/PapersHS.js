@@ -4,22 +4,52 @@ import './PapersHS.css'
 import { useFetch } from '../../useFetch';
 import { HeaderText } from './HeaderText'
 import { Table } from './Table'
+import { getAllPapers, useGetPapers } from '../../API/paperService';
+import { getConference, useGetConference, useGetConferences } from '../../API/conferenceService'
+
+
+const apiLink = "https://backend-1653064679221.azurewebsites.net/";
 
 export const PapersHS = (props) => {
 
     const columns = [
-        { field: 'id', headerName: 'ID', width: 70 },
-        { field: 'title', headerName: 'Paper Name', width: 270 },
-        { field: 'abstract_text', headerName: 'Abstract', width: 300 },
+        { field: 'id', headerName: 'ID', width: 100 },
+        { field: 'title', headerName: 'Paper Name', width: 400 },
         { field: 'status', headerName: 'Status', width: 300}
       ];
 
     const accepted = props.accepted;
-    const apiURL = "https://mocki.io/v1/b286fae1-d341-4d28-ad65-ad8613c2e064";
-    const papers = useFetch(apiURL);
-    
+    const allConferences = useGetConferences(apiLink);
+    const [myConferences, setMyConferences] = useState([]);
+    const [papers, setPapers] = useState([]);
     const [buttonText, setButtonText] = useState("");
     const [paper, setPaper] = useState(null);
+
+
+    function getPapers() {
+      console.log(localStorage.getItem('userId'))
+      let prs = [];
+      for (var i = 0 ; i < allConferences.length; i++) {
+        getConference(allConferences[i].id)
+            .then(response => {
+              if(response.chairId == localStorage.getItem('userId')) {
+                console.log("It matches!")
+                getAllPapers(apiLink, response.id)
+                    .then((resp) => {
+                        prs = resp.map((paper) => paper)
+                        })
+                    .finally(() => {
+                        setPapers(prs);
+                    })
+              }
+            })
+      }
+    }
+
+    useEffect(() => {
+      getPapers();
+    }, [allConferences])
+
 
     useEffect(() => {
       if (accepted === true) {
@@ -45,7 +75,8 @@ export const PapersHS = (props) => {
     useEffect(() => {
       if (paper != null) {
         enableButtons(paper);
-        localStorage.setItem("selectedPaper", JSON.stringify(paper));
+        localStorage.setItem("paperId", JSON.stringify(paper));
+        localStorage.setItem("selectedPaper", JSON.stringify(paper))
       }
     }, [paper])
 
